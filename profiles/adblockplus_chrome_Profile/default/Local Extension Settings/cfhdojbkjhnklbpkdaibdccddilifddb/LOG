@@ -1,0 +1,49 @@
+2018/08/23-08:36:42.621 4300 Reusing MANIFEST C:\Users\W\AppData\Local\Temp\ghostery_Chrome_Profile2018-08-23_07-10-34\Default\Local Extension Settings\cfhdojbkjhnklbpkdaibdccddilifddb/MANIFEST-000001
+2018/08/23-08:36:54.021 2916 Level-0 table #5: started
+2018/08/23-08:36:54.166 2916 Level-0 table #5: 4605085 bytes OK
+2018/08/23-08:36:54.207 2916 Delete type=0 #3
+2018/08/23-08:36:56.173 2916 Level-0 table #7: started
+2018/08/23-08:36:56.311 2916 Level-0 table #7: 3462053 bytes OK
+2018/08/23-08:36:56.352 2916 Delete type=0 #4
+2018/08/23-08:36:58.331 2916 Level-0 table #9: started
+2018/08/23-08:36:58.490 2916 Level-0 table #9: 3669045 bytes OK
+2018/08/23-08:36:58.530 2916 Delete type=0 #6
+2018/08/23-08:37:26.971 2916 Level-0 table #11: started
+2018/08/23-08:37:27.105 2916 Level-0 table #11: 3859359 bytes OK
+2018/08/23-08:37:27.142 2916 Delete type=0 #8
+2018/08/23-08:37:43.377 2916 Level-0 table #13: started
+2018/08/23-08:37:43.502 2916 Level-0 table #13: 3859188 bytes OK
+2018/08/23-08:37:43.543 2916 Delete type=0 #10
+2018/08/23-08:37:43.704 2916 Level-0 table #15: started
+2018/08/23-08:37:43.819 2916 Level-0 table #15: 3859709 bytes OK
+2018/08/23-08:37:43.843 2916 Delete type=0 #12
+2018/08/23-08:37:43.844 2916 Compacting 4@0 + 1@1 files
+2018/08/23-08:37:44.048 2916 Generated table #16@0: 1 keys, 3859709 bytes
+2018/08/23-08:37:44.052 2916 Compacted 4@0 + 1@1 files => 3859709 bytes
+2018/08/23-08:37:44.102 2916 compacted to: files[ 0 1 1 0 0 0 0 ]
+2018/08/23-08:37:44.102 2916 Delete type=2 #7
+2018/08/23-08:37:44.103 2916 Delete type=2 #9
+2018/08/23-08:37:44.104 2916 Delete type=2 #11
+2018/08/23-08:37:44.104 2916 Delete type=2 #13
+2018/08/23-08:37:44.105 2916 Delete type=2 #15
+2018/08/23-08:37:48.398 2916 Level-0 table #18: started
+2018/08/23-08:37:48.525 2916 Level-0 table #18: 3859969 bytes OK
+2018/08/23-08:37:48.559 2916 Delete type=0 #14
+2018/08/23-08:38:00.067 2916 Level-0 table #20: started
+2018/08/23-08:38:00.192 2916 Level-0 table #20: 2847633 bytes OK
+2018/08/23-08:38:00.226 2916 Delete type=0 #17
+2018/08/23-08:38:26.210 2916 Level-0 table #22: started
+2018/08/23-08:38:26.329 2916 Level-0 table #22: 2246310 bytes OK
+2018/08/23-08:38:26.363 2916 Delete type=0 #19
+2018/08/23-08:38:32.328 2916 Level-0 table #24: started
+2018/08/23-08:38:32.442 2916 Level-0 table #24: 2847626 bytes OK
+2018/08/23-08:38:32.476 2916 Delete type=0 #21
+2018/08/23-08:38:32.477 2916 Compacting 4@0 + 1@1 files
+2018/08/23-08:38:32.609 2916 Generated table #25@0: 2 keys, 1518991 bytes
+2018/08/23-08:38:32.609 2916 Compacted 4@0 + 1@1 files => 1518991 bytes
+2018/08/23-08:38:32.642 2916 compacted to: files[ 0 1 1 0 0 0 0 ]
+2018/08/23-08:38:32.642 2916 Delete type=2 #16
+2018/08/23-08:38:32.643 2916 Delete type=2 #18
+2018/08/23-08:38:32.643 2916 Delete type=2 #20
+2018/08/23-08:38:32.644 2916 Delete type=2 #22
+2018/08/23-08:38:32.644 2916 Delete type=2 #24

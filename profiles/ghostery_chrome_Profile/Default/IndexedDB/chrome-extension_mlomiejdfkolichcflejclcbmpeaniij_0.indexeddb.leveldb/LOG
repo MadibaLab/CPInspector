@@ -1,0 +1,55 @@
+2018/08/23-06:06:09.722 4404 Reusing MANIFEST C:\Users\W\AppData\Local\Temp\ghostery_Chrome_Profile2018-08-23_06-05-57\Default\IndexedDB\chrome-extension_mlomiejdfkolichcflejclcbmpeaniij_0.indexeddb.leveldb/MANIFEST-000001
+2018/08/23-06:06:18.050 5372 Current memtable full; waiting...
+2018/08/23-06:06:18.050 6100 Level-0 table #5: started
+2018/08/23-06:06:18.111 6100 Level-0 table #5: 226067 bytes OK
+2018/08/23-06:06:18.137 6100 Delete type=0 #3
+2018/08/23-06:06:18.139 6100 Level-0 table #7: started
+2018/08/23-06:06:18.139 6100 Level-0 table #7: 0 bytes OK
+2018/08/23-06:06:18.160 6100 Delete type=0 #4
+2018/08/23-06:06:18.160 6100 Manual compaction at level-0 from '\x00\x0e\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x0f\x00\x00\x00' @ 0 : 0; will stop at (end)
+2018/08/23-06:06:20.382 6100 Level-0 table #9: started
+2018/08/23-06:06:20.382 5372 Current memtable full; waiting...
+2018/08/23-06:06:20.456 6100 Level-0 table #9: 974748 bytes OK
+2018/08/23-06:06:20.493 6100 Delete type=0 #6
+2018/08/23-06:06:20.494 6100 Level-0 table #11: started
+2018/08/23-06:06:20.494 6100 Level-0 table #11: 0 bytes OK
+2018/08/23-06:06:20.515 6100 Delete type=0 #8
+2018/08/23-06:06:20.515 6100 Manual compaction at level-0 from '\x00\x10\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x11\x00\x00\x00' @ 0 : 0; will stop at (end)
+2018/08/23-06:06:20.515 6100 Manual compaction at level-1 from '\x00\x10\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x11\x00\x00\x00' @ 0 : 0; will stop at '\x00\x11\x00\x00\x05' @ 689 : 1
+2018/08/23-06:06:20.515 6100 Compacting 1@1 + 1@2 files
+2018/08/23-06:06:20.639 6100 Generated table #12@1: 534 keys, 1197530 bytes
+2018/08/23-06:06:20.639 6100 Compacted 1@1 + 1@2 files => 1197530 bytes
+2018/08/23-06:06:20.670 6100 compacted to: files[ 0 0 1 0 0 0 0 ]
+2018/08/23-06:06:20.671 6100 Delete type=2 #5
+2018/08/23-06:06:20.671 6100 Delete type=2 #9
+2018/08/23-06:06:20.671 6100 Manual compaction at level-1 from '\x00\x11\x00\x00\x05' @ 689 : 1 .. '\x00\x11\x00\x00\x00' @ 0 : 0; will stop at (end)
+2018/08/23-06:06:23.517 6100 Level-0 table #14: started
+2018/08/23-06:06:23.968 6100 Level-0 table #14: 2716872 bytes OK
+2018/08/23-06:06:24.080 6100 Delete type=0 #10
+2018/08/23-06:06:24.428 5372 Current memtable full; waiting...
+2018/08/23-06:06:24.428 6100 Level-0 table #16: started
+2018/08/23-06:06:24.465 6100 Level-0 table #16: 4828 bytes OK
+2018/08/23-06:06:24.482 6100 Delete type=0 #13
+2018/08/23-06:06:24.483 6100 Level-0 table #18: started
+2018/08/23-06:06:24.483 6100 Level-0 table #18: 0 bytes OK
+2018/08/23-06:06:24.499 6100 Delete type=0 #15
+2018/08/23-06:06:24.499 6100 Manual compaction at level-0 from '\x00\x11\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x12\x00\x00\x00' @ 0 : 0; will stop at '\x00\x11\x04\x02\x01\x0a\x00m\x00e\x00t\x00a\x00-\x00s\x00t\x00o\x00r\x00e' @ 866 : 1
+2018/08/23-06:06:24.499 6100 Compacting 1@0 + 1@1 files
+2018/08/23-06:06:24.631 6100 Generated table #19@0: 20 keys, 2725945 bytes
+2018/08/23-06:06:24.693 6100 Generated table #20@0: 168 keys, 2110 bytes
+2018/08/23-06:06:24.693 6100 Compacted 1@0 + 1@1 files => 2728055 bytes
+2018/08/23-06:06:24.710 6100 compacted to: files[ 0 2 1 0 0 0 0 ]
+2018/08/23-06:06:24.710 6100 Delete type=2 #14
+2018/08/23-06:06:24.711 6100 Delete type=2 #16
+2018/08/23-06:06:24.712 6100 Manual compaction at level-0 from '\x00\x11\x04\x02\x01\x0a\x00m\x00e\x00t\x00a\x00-\x00s\x00t\x00o\x00r\x00e' @ 866 : 1 .. '\x00\x12\x00\x00\x00' @ 0 : 0; will stop at (end)
+2018/08/23-06:06:24.712 6100 Expanding@1 1+1 (2110+1197530 bytes) to 2+1 (2728055+1197530 bytes)
+2018/08/23-06:06:24.712 6100 Manual compaction at level-1 from '\x00\x11\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x12\x00\x00\x00' @ 0 : 0; will stop at '\x00\x11\x04\x02\x01\x0a\x00m\x00e\x00t\x00a\x00-\x00s\x00t\x00o\x00r\x00e' @ 866 : 1
+2018/08/23-06:06:24.712 6100 Compacting 2@1 + 1@2 files
+2018/08/23-06:06:25.261 6100 Generated table #21@1: 376 keys, 3921428 bytes
+2018/08/23-06:06:25.390 6100 Generated table #22@1: 169 keys, 2130 bytes
+2018/08/23-06:06:25.391 6100 Compacted 2@1 + 1@2 files => 3923558 bytes
+2018/08/23-06:06:25.431 6100 compacted to: files[ 0 0 2 0 0 0 0 ]
+2018/08/23-06:06:25.432 6100 Delete type=2 #12
+2018/08/23-06:06:25.433 6100 Delete type=2 #19
+2018/08/23-06:06:25.434 6100 Delete type=2 #20
+2018/08/23-06:06:25.434 6100 Manual compaction at level-1 from '\x00\x11\x04\x02\x01\x0a\x00m\x00e\x00t\x00a\x00-\x00s\x00t\x00o\x00r\x00e' @ 866 : 1 .. '\x00\x12\x00\x00\x00' @ 0 : 0; will stop at (end)
