@@ -324,7 +324,7 @@ def initiateWebDriver(type,browsertype):
         FP = getProfilePath(type,browsertype)
         profile= FirefoxProfile1(FP)
         #define binary location path
-        binary = FirefoxBinary(params["root_dir"] + r'\browsers\Mozilla Firefox\firefox.exe')
+        #binary = FirefoxBinary(params["root_dir"] + r'\browsers\Mozilla Firefox\firefox.exe')
         #set profile preferences
         profile.set_preference("network.http.spdy.enabled.http2", False)
         profile.set_preference("xpinstall.signatures.required", False)
@@ -347,9 +347,9 @@ def initiateWebDriver(type,browsertype):
         os.environ["PATH"] += os.pathsep +  params["root_dir"] + "\drivers\geckodriver.exe"
         executable_path = params["root_dir"] + "\drivers\geckodriver.exe"
         if type =='Incognito':
-            driver =webdriver.Firefox(firefox_profile=profile,firefox_options=options, firefox_binary=binary, executable_path=executable_path)
+            driver =webdriver.Firefox(firefox_profile=profile,firefox_options=options,  executable_path=executable_path)
         else:
-            driver =webdriver.Firefox(firefox_profile=profile, firefox_binary=binary, executable_path=executable_path)
+            driver =webdriver.Firefox(firefox_profile=profile,  executable_path=executable_path)
 
         #store log file in parameters, form this file we extract temp profile name
         params["driverlogpath"] =  params["output_directory"]   + "\geckodriver.log"
@@ -379,7 +379,7 @@ def initiateWebDriver(type,browsertype):
         options.add_extension(params["root_dir"] + "/extensions/chrome_extensions/DFPM_v1.15.crx")
         options.add_extension(params["root_dir"] + "/extensions/chrome_extensions/hotspot.crx")
         #define binary location path
-        options.binary_location = params["root_dir"] + r'\browsers\Chrome\Application\Chrome.exe'
+        #options.binary_location = params["root_dir"] + r'\browsers\Chrome\Application\Chrome.exe'
         #put driver path in environment variables
         os.environ["PATH"] += os.pathsep +  params["root_dir"] + "\drivers\chromedriver.exe"
         executable_path = params["root_dir"] + "\drivers\chromedriver.exe"
@@ -1537,17 +1537,17 @@ def add_policy():
    if url != "":
         if params["browsertype"] =="Firefox":
            
-            executable_path = params["root_dir"] + r'\browsers\Mozilla Firefox\firefox.exe'
-            binary = FirefoxBinary(executable_path)
+            #executable_path = params["root_dir"] + r'\browsers\Mozilla Firefox\firefox.exe'
+            #binary = FirefoxBinary(executable_path)
             executable_path = params["root_dir"] + "\drivers\geckodriver.exe"
 
-            driver =webdriver.Firefox(firefox_binary=binary, executable_path=executable_path)
+            driver =webdriver.Firefox(executable_path=executable_path)
         else:
             executable_path = params["root_dir"] + r'\browsers\Chrome\Application'
             #check how to add binary to chrome
             executable_path = params["root_dir"] + "\drivers\chromedriver.exe"
             options = webdriver.ChromeOptions()
-            options.binary_location = params["root_dir"] + r'\browsers\Chrome\Application\Chrome.exe'
+            #options.binary_location = params["root_dir"] + r'\browsers\Chrome\Application\Chrome.exe'
             options.add_argument("start-maximized")
             driver = webdriver.Chrome(executable_path=executable_path, chrome_options=options)
 

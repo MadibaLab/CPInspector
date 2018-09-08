@@ -1,0 +1,26 @@
+
+{
+  "description": "Firefox Interceptor for cookies",
+  "manifest_version": 2,
+  "name": "Hotspots",
+  "version": "1.0",
+
+  "permissions": [
+    "webRequest",
+    "cookies",
+    "storage",
+    "<all_urls>"
+  ],
+
+    "content_scripts": [
+        {
+            "matches": ["*://*/*"],
+            "js": ["content.js"],
+            "run_at": "document_start",
+	    "all_frames": true
+        }
+    ],
+  "background": {
+    "scripts": ["background.js"]
+  }
+}
