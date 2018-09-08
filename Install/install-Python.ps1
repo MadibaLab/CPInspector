@@ -1,7 +1,7 @@
 [CmdletBinding()] Param(
     $pythonVersion = "3.7.0",
     $pythonDownloadPath = "C:\Hotspot\install\tools\python-${pythonVersion}-amd64.exe",
-    $pythonInstallDir = "C:\python${pythonVersion}"
+    $pythonInstallDir = "C:\python37"
 ) 
 echo "Install Python 3.7.0 to ${pythonInstallDir}"
 & $pythonDownloadPath /quiet InstallAllUsers=1 PrependPath=1 Include_test=0 TargetDir=$pythonInstallDir
