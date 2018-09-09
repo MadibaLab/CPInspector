@@ -1,13 +1,13 @@
 # Installation
-Currently, hotspots has primarily been written and tested on windows 7 and windows 10 machines. The following sets of commands should enable it to run on a clean install of Windows10. you can use Oracle VM Virtualbox for this purpose.
+Currently, Hotspot has primarily been written and tested on windows 7 and windows 10 machines. The following sets of commands should enable it to run on a clean install of Windows10. you can use Oracle VM Virtualbox for this purpose.
 
 
 
 ## Installation Instructions
 
-###### Open Command Prompt, then run the folllowing commands:  
+###### Open Command Prompt, then run the following commands:  
 
-- Cd\
+- cd\
 
 
 - git clone https://github.com/sali123/Hotspot/
