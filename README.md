@@ -13,7 +13,7 @@ Currently, Hotspot has primarily been written and tested on windows 7 and window
 - git clone https://github.com/sali123/Hotspot/
 
 
-Note: download Git application from https://git-scm.com/download/win
+Note: Git application can be downloaded from https://git-scm.com/download/win
 
 
 
