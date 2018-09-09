@@ -9,7 +9,7 @@
 # Set the PATH environment variable for the entire machine (that is, for all users) to include the Python install dir
 
 
-[Environment]::SetEnvironmentVariable("PATH", "${env:path};C:\Program files\wireshark;${pythonInstallDir};${pythonInstallDir}\Scripts;${pythonInstallDir}\Lib\site-packages;", "Machine")
+[Environment]::SetEnvironmentVariable("PATH", "${env:path};C:\Program Files\nodejs\;C:\Program files\wireshark;${pythonInstallDir};${pythonInstallDir}\Scripts;${pythonInstallDir}\Lib\site-packages;", "Machine")
 
 
 #[Environment]::SetEnvironmentVariable("PATH", "${env:path};${pythonInstallDir}\Lib\site-packages", "Machine")
