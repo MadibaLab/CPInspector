@@ -482,6 +482,8 @@ def Create_outputfolders():
 # find_Wireless_Interface
 #-----------------------------
 def find_Wireless_Interface():
+    interface = "-1"
+    ethernet = "-1" #for VM
     
     args  = ["tshark", "-D"]
     p = subprocess.Popen(args , stdout=subprocess.PIPE, shell=True) ## Talk with date command i.e. read data from stdout and stderr. Store this info in tuple ##
@@ -494,7 +496,17 @@ def find_Wireless_Interface():
             continue
         if 'Wireless' in item:
             interface = str(idx)
+        if 'Ethernet' in item:
+            ethernet = str(idx)
         idx = idx + 1    
+
+
+    if  interface == "-1":
+        if  ethernet != "-1":
+            interface = ethernet
+        else:
+            raise IOError('No Installed wireless or Ethernet Interface for capturing traffic')
+
             
     return interface
 
@@ -1500,7 +1512,7 @@ params["interface"] = find_Wireless_Interface()
 params["criticalerror"]  = False
 
 params["visit_id"] = 0
-params["root_dir"] = os.getcwd()
+params["root_dir"] = params["rootPath"] #os.getcwd()
 params["step"] = "Prepare"
 params["WelcomePageURL"]  = ""
 

@@ -1,5 +1,22 @@
-Powershell.exe -ExecutionPolicy bypass -File "c:\hotspot\Install\Install-Python.ps1" 
+@echo off
+echo.
+==================================================================
+echo   Python silent install
+===================================================================
+start C:\Hotspot\install\tools\python-${pythonVersion}-amd64.exe /quiet InstallAllUsers=1 PrependPath=1 Include_test=0 TargetDir=C:\python37
+powershell -command "Start-Sleep -s 120"
+Echo Done
+
+
+
+@echo off
+echo.
+==================================================================
+echo   Wireshark silent install
+===================================================================
 Powershell.exe -ExecutionPolicy bypass -File "c:\hotspot\Install\Install-Wireshark.ps1" 
+powershell -command "Start-Sleep -s 120"
+Echo Done
 
 
 
@@ -8,7 +25,7 @@ echo.
 ==================================================================
 echo   firefox silent install
 ===================================================================
-start C:\hotspot\install\tools\FirefoxSetup60.2.0esr.exe /S /INI=C:\hotspot\Install\tools\firefox.ini 
+start C:\hotspot\install\tools\FirefoxSetup60.2.0esr.exe /S 
 Echo Done
 
 
@@ -17,10 +34,11 @@ Echo Done
 @echo off
 echo.
 ==================================================================
-echo   Chromesilent install
+echo   Chrome silent install
 ===================================================================
 
-Msiexec /qn /i "C:\hotspot\install\tools\googlechromestandaloneenterprise64.msi" INSTALLDIR="C:\hotspot\browsers"  INSTALLERPATH="<C:\hotspot\install\tools\master_preferences.msp>" 
+Msiexec /i "C:\hotspot\install\tools\googlechromestandaloneenterprise64.msi"  /qn
+
 Echo Done
 
 
@@ -31,8 +49,7 @@ echo.
 ==================================================================
 echo   Wireshark silent install
 ===================================================================
-If not exist C:\Hotspot\Install\Logs\ md C:\Hotspot\Install\Logs\
-start /wait C:\Hotspot\Install\tools\Wireshark-win64-2.6.2.exe /S /L*v "C:\Hotspot\Install\logs\wireshrk.log"
+start /wait C:\Hotspot\Install\tools\Wireshark-win64-2.6.2.exe /S 
 Echo Done
 
 
@@ -41,8 +58,7 @@ echo.
 ==================================================================
 echo  winpcab silent install
 ===================================================================
-If not exist C:\Hotspot\Install\Logs\ md C:\Hotspot\Install\Logs\
-start /wait C:\Hotspot\Install\tools\WinPcap_4_1_3.exe /S /L*v "C:\Hotspot\Install\logs\winpcap.log"
+start /wait C:\Hotspot\Install\tools\WinPcap_4_1_3.exe /S 
 Echo Done
 
 
@@ -51,14 +67,15 @@ echo.
 ==================================================================
 echo   node js
 ===================================================================
-If not exist C:\Hotspot\Install\Logs\ md C:\Hotspot\Install\Logs\
 Msiexec  /i C:\Hotspot\Install\tools\node-v8.11.4-x64.msi  /qn
 Echo Done
 
-cd %USERPROFILE%
-python -m pip install --upgrade pip
-pip install selenium==3.14.0
-pip install six
-pip install pywin32
-cd C:\Hotspot\extensions\chrome_extensions\DFPM
-npm install chrome-remote-interface -g
+@echo off
+echo.
+==================================================================
+echo   Add registry variables
+===================================================================
+powershell -command "Start-Sleep -s 120"
+Powershell.exe -ExecutionPolicy bypass -File "c:\hotspot\Install\Install-Python.ps1" 
+Echo Done
+

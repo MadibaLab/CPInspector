@@ -9,6 +9,6 @@ echo "Install wireshark 2.6.2 to ${wiresharkInstallDir}"
 # Set the PATH environment variable for the entire machine (that is, for all users) to include the wireshark install dir
 
 
-[Environment]::SetEnvironmentVariable("PATH", "${env:path};${wiresharkInstallDir}", "Machine")
+#[Environment]::SetEnvironmentVariable("PATH", "${env:path};${wiresharkInstallDir}", "Machine")
 
 

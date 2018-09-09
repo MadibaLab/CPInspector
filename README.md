@@ -16,7 +16,18 @@ note: download Git application from https://git-scm.com/download/win
 c:\hotspot\install\install.bat 
 
 
+--Open  regular Command Prompt (without Administrator Privileges), then run the following command
+c:\hotspot\install\installDev.bat 
 
---Open Command Prompt and run the following command:
 
-python c:\hotspot\crawl.py
+--running the application, visit at any place that has Public Wifi
+
+open the IDLE program (Windows: Start ? All Programs ? Python 3.7 ? IDLE (Python GUI).
+
+In the IDLE program, using File ? Open in Windows, go to the c:\hotspot folder. Open the file called "crawl", which might show up as crawl or as crawl.py in the directory listing.
+
+
+In the menu, select Run ? Run Module. (The shortcut for this is F5.)
+
+
+A screen will open which guide you in the process of connecting to the internet using public WIFI. 
