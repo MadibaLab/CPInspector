@@ -7,23 +7,24 @@ Currently, hotspots has primarily been written and tested on windows 7 and windo
 
 ###### Open Command Prompt, then run the folllowing commands:  
 
-Cd\
+- Cd\
 
 
-git clone https://github.com/sali123/Hotspot/
+- git clone https://github.com/sali123/Hotspot/
 
-note: download Git application from https://git-scm.com/download/win
+
+Note: download Git application from https://git-scm.com/download/win
 
 
 
 ######  Open Command Prompt with Administrator Privileges, then run the following command: 
 
-c:\hotspot\install\install.bat 
+- c:\hotspot\install\install.bat 
 
 
 ###### Open  regular Command Prompt (without Administrator Privileges), then run the following command:  
 
-c:\hotspot\install\installDev.bat 
+- c:\hotspot\install\installDev.bat 
 
 
 ## Running the application
