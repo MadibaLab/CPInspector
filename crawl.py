@@ -33,6 +33,8 @@ from selenium.webdriver.firefox.firefox_profile import (
     AddonFormatError
 )
 
+#todo DFP does not work on VM
+
 import codecs
 import zipfile
 

@@ -1,0 +1,28 @@
+{
+    "name": "Hotspots",
+    "version": "0.1",
+    "manifest_version": 2,
+    "description": "Chrome Interceptor for cookies",
+    "background": {
+        "scripts": [
+            "background.js"
+        ],
+        "persistent": true
+    },
+    "content_scripts": [
+        {
+            "matches": ["*://*/*"],
+            "js": ["content.js"],
+            "run_at": "document_start",
+	    "all_frames": true
+        }
+    ],
+    "permissions": [
+        "contentSettings",
+        "webRequest",
+        "webRequestBlocking",
+	"storage",
+	"cookies",
+        "*://*/*"
+    ]
+}
