@@ -3,9 +3,9 @@ Currently, hotspots has primarily been written and tested on windows 7 and windo
 
 
 
-##Installation Instructions
+## Installation Instructions
 
-** **Open Command Prompt, then run the folllowing commands:
+** Open Command Prompt, then run the folllowing commands: ** 
 
 Cd\
 
@@ -16,20 +16,20 @@ note: download Git application from https://git-scm.com/download/win
 
 
 
-** **Open Command Prompt with Administrator Privileges, then run the following command
+**  Open Command Prompt with Administrator Privileges, then run the following command **
 c:\hotspot\install\install.bat 
 
 
-** **Open  regular Command Prompt (without Administrator Privileges), then run the following command
+** Open  regular Command Prompt (without Administrator Privileges), then run the following command ** 
 c:\hotspot\install\installDev.bat 
 
 
-##Running the application
+## Running the application
 
-** ** visit at any place that has Public Wifi.
+**  Visit at any place that has Public Wifi.** 
 
 
--open the IDLE program (Windows: Start ? All Programs ? Python 3.7 ? IDLE (Python GUI).
+-Open the IDLE program (Windows: Start ? All Programs ? Python 3.7 ? IDLE (Python GUI).
 
 -In the IDLE program, using File ? Open in Windows, go to the c:\hotspot folder. Open the file called "crawl", which might show up as crawl or as crawl.py in the directory listing.
 
