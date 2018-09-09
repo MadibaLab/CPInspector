@@ -16,11 +16,13 @@ note: download Git application from https://git-scm.com/download/win
 
 
 
-**  Open Command Prompt with Administrator Privileges, then run the following command **
++b  Open Command Prompt with Administrator Privileges, then run the following command: 
+
 c:\hotspot\install\install.bat 
 
 
-** Open  regular Command Prompt (without Administrator Privileges), then run the following command ** 
+** Open  regular Command Prompt (without Administrator Privileges), then run the following command: ** 
+
 c:\hotspot\install\installDev.bat 
 
 
