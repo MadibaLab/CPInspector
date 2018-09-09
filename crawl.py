@@ -750,7 +750,7 @@ def Command_Manager():
 
             #initialize the user help  fields      
             label1.configure(text="Captive Portal - Important Guidelines:")
-            label2.configure(text="1. Select you desired WIFI then click Start.\n2. Don't click the 'Start' button until your system prompt to login.\n3. Do not refresh the browser at any case.\n4. Always wait till the website is loaded completely before taking any action.\n5. Close all browsers  while the application is running.\n6. Click 'Save Content' for any url loaded into the browser other than the 'Welcome page' and 'Landing page' (e.g. Facebook login page)\n7. Repeat data collection incase of any error (i.e loosing connectivitiy with Captive Portal)")
+            label2.configure(text="1. Select you desired WIFI then click Start.\n2. Don't click the 'Start' button until your system prompt to login.\n3. Do not refresh the browser at any case.\n4. Always wait till the website is loaded completely before taking any action.\n5. Close all browsers on your machine/VM (if any) while the application is running.\n6. Click 'Save Content' for any url loaded into the browser other than the 'Welcome page' and 'Landing page' (e.g. Facebook login page)\n7. Repeat data collection incase of any error (i.e loosing connectivitiy with Captive Portal)")
             e1.configure(state="disabled")
             e2.configure(state="disabled")
             list1.configure(state="disabled")
@@ -766,7 +766,7 @@ def Command_Manager():
 
         #reset the user help  fields      
         label1.configure(text="Captive Portal - Important Guidelines:")
-        label2.configure(text="1.Connect to the internet using the launched browser then click Finish.\n2. Do not refresh the browser at any case.\n3. Always wait till the website is loaded completely before taking any action.\n4. Close all browsers  while the application is running.\n5. Repeat data collection incase of any error (i.e loosing connectivitiy with Captive Portal)")
+        label2.configure(text="1.Connect to the internet using the launched browser then click Finish.\n2. Do not refresh the browser at any case.\n3. Always wait till the website is loaded completely before taking any action.\n4. Close all browsers on your machine/VM (if any) while the application is running.\n5. Repeat data collection incase of any error (i.e loosing connectivitiy with Captive Portal)")
         label4.configure(text="Important: Click 'Save Content' button for any url loaded into the browser \nother than the welcome page and landing page (e.g. Facebook login page).\nIn general, you dont need this option for most WIFIs consist of two steps authentication.")
 
         #Kill Processes

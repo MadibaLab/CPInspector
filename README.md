@@ -26,6 +26,8 @@ Note: Git application can be downloaded from https://git-scm.com/download/win
 
 - c:\hotspot\install\installDev.bat 
 
+- Restart the machine.
+
 
 ## Running the application
 

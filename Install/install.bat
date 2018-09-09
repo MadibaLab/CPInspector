@@ -3,7 +3,7 @@ echo.
 ==================================================================
 echo   Python silent install
 ===================================================================
-start C:\Hotspot\install\tools\python-${pythonVersion}-amd64.exe /quiet InstallAllUsers=1 PrependPath=1 Include_test=0 TargetDir=C:\python37
+start C:\Hotspot\install\tools\python-3.7.0-amd64.exe /quiet InstallAllUsers=1 PrependPath=1 Include_test=0 TargetDir=C:\python37
 powershell -command "Start-Sleep -s 120"
 Echo Done
 
