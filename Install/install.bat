@@ -6,8 +6,6 @@ echo   node js
 Msiexec  /i C:\Hotspot\Install\tools\node-v8.11.4-x64.msi  /qn
 powershell -command "Start-Sleep -s 300"
 
-npm i npm
-npm -i
 Echo Done
 
 
@@ -83,6 +81,6 @@ echo.
 echo   Add registry variables
 ===================================================================
 powershell -command "Start-Sleep -s 120"
-Powershell.exe -ExecutionPolicy bypass -File "c:\hotspot\Install\Install-Python.ps1" 
+Powershell.exe -ExecutionPolicy bypass -File "c:\hotspot\Install\Install-Env.ps1" 
 Echo Done
 

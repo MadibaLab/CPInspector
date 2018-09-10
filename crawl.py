@@ -384,8 +384,8 @@ def initiateWebDriver(type,browsertype):
         #define binary location path
         #options.binary_location = params["root_dir"] + r'\browsers\Chrome\Application\Chrome.exe'
         #put driver path in environment variables
-        os.environ["PATH"] += os.pathsep +  params["root_dir"] + "\drivers\chromedriver.exe"
-        executable_path = params["root_dir"] + "\drivers\chromedriver.exe"
+        executable_path = os.path.join(params["root_dir"] , "drivers","chromedriver.exe")
+        os.environ["PATH"] += executable_path
         driver = webdriver.Chrome(executable_path=executable_path, chrome_options=options)
 
        
@@ -397,8 +397,8 @@ def initiateWebDriver(type,browsertype):
     #Open browser on url to detect captive portal
     #driver.get("https://mcd-e.datavalet.io/E4358CA832CB4C96A2BCB1C546DF64B7/FC0BEDA4DB49483BADEA173EBE1E0FD0/bG9naW5fdXJsPWh0dHBzJTNBJTJGJTJGbjgxLm5ldHdvcmstYXV0aC5jb20lMkZzcGxhc2glMkZsb2dpbiUzRm1hdXRoJTNETU11Vmt2R0JacGNFY1dDV1hkTzVxZXBGWGNkSDVaOS1JYzhGc2xEZDAwU04tamlSSjlkeHR1OERMd1lhRnQwT1hJQWRmOTFfYzhaallQa3lmYUY5RHg2b0dZUkVhWUh5a1FBeVROS2I1R0x1bW5jdk5RRExNdmlBS0lOa3psNUdWV2x2SktMdzJDbW1yZmRDUFliYm1ac29PZTBGaFIwWlJNLUkzSk9PcEFmek1Ud09ZQWlpaDBLMUx6RXg0aFFBSUk0cWkyZzdKVUhIQSUyNmNvbnRpbnVlX3VybCUzRGh0dHAlMjUzQSUyNTJGJTI1MkZ3d3cubWNkb25hbGRzLmNhJTI1MkYmY29udGludWVfdXJsPWh0dHAlM0ElMkYlMkZ3d3cubWNkb25hbGRzLmNhJTJGJmFwX21hYz04OCUzQTE1JTNBNDQlM0FhYSUzQTkxJTNBMDUmYXBfbmFtZT1NQ0QtUUMtTEFTLTAyMzc5LVdBUDEmYXBfdGFncz0mY2xpZW50X21hYz0wMiUzQWUwJTNBZTMlM0FmMiUzQTUyJTNBYWYmY2xpZW50X2lwPTE5Mi4xNjguMjU1LjE3NA==/fr/welcome.html")
     if browsertype =="Firefox":
-        driver.get("http://detectportal.firefox.com/success.txt")
-        #driver.get("https://walmart.ca")
+        #driver.get("http://detectportal.firefox.com/success.txt")
+        driver.get("https://walmart.ca")
         #this code will work only on firefox
         try:
             driver.maximize_window() #maximize the
@@ -689,9 +689,8 @@ def dump_all_final_data():
 
     
     #save hotspot parameters
-    current_url = driver2.current_url
-    save_hotspot_params(current_url)
-
+    params["landingpage"] = driver2.current_url
+ 
     # dump profile cookies from sqlite database.
     # this step is important for chrome, because we are decrypting  the cookie encrypted values
     dump_profile_cookies('last')
@@ -801,7 +800,7 @@ def Command_Manager():
             b1_text.set("Add Policy")
             params["step"] = "Addpolicy"
             label1.configure(text="Captive Portal Policy Collection Guidelines:")
-            label2.configure(text="The application will try to upload the policy to Polisis website.\nIf that failed for any reason, please save the policy html code to agreement.html in the output folder.")
+            label2.configure(text="The application will try to upload the policy to Polisis website.\nIf that failed for any reason, please save the policy html code to agreement.html in the output folder.\n\nNote: the system will use Firfox browser to upload the policy.")
         else:
             #direct the user to verify stage
             b1_text.set("Verify")
@@ -829,7 +828,7 @@ def Command_Manager():
         label2.configure(text="The application will try to upload the policy to Polisis website.\n If that failed for any reason, please save the policy html code to agreement.html in the output folder.")
         label4.configure(text="")
 
-        messagebox.showinfo("Important Guidelines", "The application will try to upload the policy to Polisis website.\n If that failed for any reason, please save the policy html code to agreement.html in the output folder.")
+        #messagebox.showinfo("Important Guidelines", "The application will try to upload the policy to Polisis website.\n If that failed for any reason, please save the policy html code to agreement.html in the output folder.")
 
         b1_text.set("Verify")
         params["step"] = "verify"
@@ -849,8 +848,10 @@ def Command_Manager():
             print ("")
 
         if validate():
-            b1_text.set("Complete")
-            params["step"] = "complete"
+          #dump params.json file  
+          save_hotspot_params(params["landingpage"])
+          b1_text.set("Complete")
+          params["step"] = "complete"
             
             
     elif params["step"] == "complete":
@@ -867,41 +868,35 @@ def Command_Manager():
 # validate
 #-----------------------------
 def validate():
-    #todo chek the profile is copied
 
     if not os.path.exists(os.path.join(params["output_directory"],'agreement.html')):
-           label1.configure(text="Important")
+           label1.configure(text="Incomplete Dataset")
            label4.configure(text="Agreement was not captured, please manually upload it's HTML code as agreement.html  to output folder.")
            return False
-    elif not os.path.exists(os.path.join(params["output_directory"],'params.json')):
-           label1.configure(text="Important")
-           label4.configure(text="params - Critical Error occured during the data collection, this dataset should be discarded.")
-           return False
-
     elif not os.path.exists(os.path.join(params["output_directory"],'sslkeylog.log')):
-           label1.configure(text="Important")
+           label1.configure(text="Incomplete Dataset")
            label4.configure(text="sslkeylog - Critical Error occured during the data collection, this dataset should be discarded.")
            return False
 
     elif not os.path.exists(os.path.join(params["output_directory"],'traffic.pcap')):
-           label1.configure(text="Important")
+           label1.configure(text="Incomplete Dataset")
            label4.configure(text="Traffic.pcap - Critical Error occured during the data collection, this dataset should be discarded.")
            return False
     elif not os.path.exists(os.path.join(params["output_directory"],'Source Code')):
-           label1.configure(text="Important")
+           label1.configure(text="Incomplete Dataset")
            label4.configure(text="Source Code - Critical Error occured during the data collection, this dataset should be discarded.")
            return False
     elif params["criticalerror"]:
-           label1.configure(text="Important")
+           label1.configure(text="Incomplete Dataset")
            label4.configure(text="session storage or local sotrage or chrome profile cookies,\nCritical Error occured during the data collection, this dataset should be discarded.")
            return False
     elif  params["browsertype"] !="Firefox":
           if os.stat(os.path.join(params["output_directory"],'DFPM.log')).st_size == 0:
-              label1.configure(text="Important")
+              label1.configure(text="Incomplete Dataset")
               label4.configure(text="DFPM, Critical Error occured during the data collection, this dataset should be discarded.")
               return False
     elif  not os.path.exists(os.path.join(params["output_directory"],'Browser_Profile')): 
-               label1.configure(text="Important")
+               label1.configure(text="Incomplete Dataset")
                label4.configure(text="Browser Profile - Critical Error occured during the data collection, this dataset should be discarded.")
                return False
   
@@ -909,7 +904,7 @@ def validate():
 
 
 #------------------------------
-# validate
+# kill_webdriver
 #-----------------------------
 def kill_webdriver(driver):
     driver.close() 
@@ -1563,32 +1558,14 @@ def add_policy():
     # add policy to polisis
 
    url = params["WelcomePageURL"]
-   #in chrome we have to remove http:// or https://
-   if params["browsertype"] !="Firefox":
-       if url.startswith("http://"):
-          url = url[7:]
-       elif url.startswith("https://"):   
-          url = url[8:]
 
    if url != "":
-        if params["browsertype"] =="Firefox":
-           
-            #executable_path = params["root_dir"] + r'\browsers\Mozilla Firefox\firefox.exe'
-            #binary = FirefoxBinary(executable_path)
-            executable_path = params["root_dir"] + "\drivers\geckodriver.exe"
+        #use firefox to add policy
+        #executable_path = params["root_dir"] + r'\browsers\Mozilla Firefox\firefox.exe'
+        #binary = FirefoxBinary(executable_path)
+        executable_path = params["root_dir"] + "\drivers\geckodriver.exe"
 
-            driver =webdriver.Firefox(executable_path=executable_path)
-        else:
-            executable_path = params["root_dir"] + r'\browsers\Chrome\Application'
-            #check how to add binary to chrome
-            executable_path = params["root_dir"] + "\drivers\chromedriver.exe"
-            options = webdriver.ChromeOptions()
-            #options.binary_location = params["root_dir"] + r'\browsers\Chrome\Application\Chrome.exe'
-            options.add_argument("start-maximized")
-            driver = webdriver.Chrome(executable_path=executable_path, chrome_options=options)
-
-
-
+        driver =webdriver.Firefox(executable_path=executable_path)
         try:
             driver.maximize_window() #maximize the
         except:
@@ -1628,7 +1605,7 @@ def add_policy():
             save_agreement(driver)
 
         except:
-            label1.configure(text="Important")
+            label1.configure(text="Incomplete Dataset")
             label4.configure(text="Agreement was not captured, please manually upload it's HTML code as agreement.html  to output folder. ")
 
 

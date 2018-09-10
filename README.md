@@ -32,6 +32,12 @@ You can install Hostspot on Windows from the command line with Administrator Pri
 
 - c:\hotspot\install\install.bat 
 
+-check if the PATH  system enviroment variable has the following:
+
+%APPDATA%\Roaming\npm;C:\Program Files\nodejs;C:\Program Files\Wireshark;c:\python37;c:\python37\Scripts;c:\python37\Lib\site-packages; 
+
+If not, run Powershell.exe -ExecutionPolicy bypass -File "c:\hotspot\Install\Install-Env.ps1"
+
 
 #### 2- Open  regular Command Prompt (without Administrator Privileges), then run the following command:  
 
@@ -91,7 +97,7 @@ Download and install TMAC for windows  from 'https://technitium.com/tmac/. Techn
 	 * For data integrity, Click 'Save Content' for any url loaded into the browser other than the 'Welcome page' and 'Landing page' (e.g. Facebook login)
 	 * Do not refresh the browser at any case.
 
-         * Always wait till the page is loaded completely before taking any action.
+	 * Always wait till the page is loaded completely before taking any action.
 
 	 * Repeat data collection incase of any error (i.e loosing connectivitiy with Captive Portal)
 
@@ -102,7 +108,7 @@ Download and install TMAC for windows  from 'https://technitium.com/tmac/. Techn
 - Click 'Verify' button. Discard the dataset if it could not be verified sucessfully.
 
 
-- Click Complete.
+- Click 'Complete' button.
 
 
 
