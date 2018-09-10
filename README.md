@@ -17,9 +17,8 @@ First, download and install Git for windows. Use the default settings. It can be
 You can install Hostspot on Windows from the command line with Administrator Privileges.You can always go to the start button and type in "cmd". When the search results are displayed, right click over the command prompt and select the "run as administrator" option. 
 
 
-#### Installation Steps
 
-###### Open  Command Prompt with Administrator Privileges then run the following command: 
+#### 1- Open  Command Prompt with Administrator Privileges then run the following command: 
 
 
 - cd\
@@ -32,7 +31,7 @@ You can install Hostspot on Windows from the command line with Administrator Pri
 - c:\hotspot\install\install.bat 
 
 
-###### Open  regular Command Prompt (without Administrator Privileges), then run the following command:  
+#### 2- Open  regular Command Prompt (without Administrator Privileges), then run the following command:  
 
 - c:\hotspot\install\installDev.bat 
 
@@ -41,7 +40,7 @@ You can install Hostspot on Windows from the command line with Administrator Pri
 
 ### Step3: Running the application
 
-######  Visit any place that has a Public WIFI.
+####  Visit any place that has a Public WIFI.
 
 
 - Open the IDLE program (Windows: Start ? All Programs ? Python 3.7 ? IDLE (Python GUI).
