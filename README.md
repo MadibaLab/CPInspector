@@ -1,5 +1,7 @@
 # Installation
-Currently, Hotspot has primarily been written and tested on windows 7 and windows 10 machines. The following sets of commands should enable it to run on a clean install of Windows10. You can use Oracle VM Virtualbox for this purpose.This vedio (https://www.youtube.com/watch?v=NGJqhSdytWs) can be used as a guidlines for how to install windows 10 on virtual box.
+Hotspots are physical locations where people can gain internet access through a Wi-Fi connection.
+
+Currently, Hotspot application has primarily been written and tested on windows 7 and windows 10 machines. The following sets of commands should enable it to run on a clean install of Windows10. You can use Oracle VM Virtualbox for this purpose.This vedio (https://www.youtube.com/watch?v=NGJqhSdytWs) can be used as a guidlines for how to install windows 10 on virtual box.
 
 
 
@@ -17,9 +19,8 @@ First, download and install Git for windows. Use the default settings. It can be
 You can install Hostspot on Windows from the command line with Administrator Privileges.You can always go to the start button and type in "cmd". When the search results are displayed, right click over the command prompt and select the "run as administrator" option. 
 
 
-#### Installation Steps
 
-###### Open  Command Prompt with Administrator Privileges then run the following command: 
+#### 1- Open  Command Prompt with Administrator Privileges then run the following command: 
 
 
 - cd\
@@ -32,7 +33,7 @@ You can install Hostspot on Windows from the command line with Administrator Pri
 - c:\hotspot\install\install.bat 
 
 
-###### Open  regular Command Prompt (without Administrator Privileges), then run the following command:  
+#### 2- Open  regular Command Prompt (without Administrator Privileges), then run the following command:  
 
 - c:\hotspot\install\installDev.bat 
 
@@ -61,25 +62,47 @@ Download and install TMAC for windows  from 'https://technitium.com/tmac/. It is
 
 - Enter or select the following information:
 
-###### Hotspot Name
-Enter the Hotspot Name, use the same name for all datasets.
+	###### Hotspot Name
+	Enter the Hotspot Name, use the same name for all datasets.
 
-###### Hotspot Address
-Enter the Hotspot Address.
+	###### Hotspot Address
+	Enter the Hotspot Address.
 
-###### Browser Type
-Select the browser type (Firefox or Chrome).
+	###### Browser Type
+	Select the browser type (Firefox or Chrome).
 
-###### Protection Method
-Select the extension that will be used for this purpose (Ghostery, Adblock Plus, Privacy Badger, Incognito) or None if you don't want to use any extension.
+	###### Protection Method
+	Select the extension that will be used for this purpose (Ghostery, Adblock Plus, Privacy Badger, Incognito) or None if you don't want to use any extension.
 
-###### Account Used
-Select the account used for connecting to the hotspot (i.e. Faceboox, LinkedIn) or None if no account was used. 
+	###### Account Used
+	Select the account used for connecting to the hotspot (i.e. Faceboox, LinkedIn) or None if no account was used. 
 
+
+- Close all browsers on your machine/VM (if any) while the application is running to avoid capturing invalid traffic.
 
 - Spoof the 'Wireless Network Connection' Mac Address then Click Prepare button.
 
+- Connecting to the desired WiFi from the bottom right corner of your screen.
 
+- When the windows notified you that you have limited connictivity, and you need further authentication. click Start button.
+
+- The browser will load the captive portal. go through the  connect to the internet wizard taking into consideration the below guidlines:
+
+	 * For data integrity, Click 'Save Content' for any url loaded into the browser other than the 'Welcome page' and 'Landing page' (e.g. Facebook login)
+	 * Do not refresh the browser at any case.
+
+         * Always wait till the page is loaded completely before taking any action.
+
+	 * Repeat data collection incase of any error (i.e loosing connectivitiy with Captive Portal)
+
+- Click 'Finish' button.
+
+- Click 'Add Policy', the application will try to upload the policy to Polisis website. If that failed for any reason, please save the policy html code to agreement.html in the output folder. Note the name of the output folder.
+
+- Click 'Verify' button. Discard the dataset if it could not be verified sucessfully.
+
+
+- Click Complete.
 
 
 
