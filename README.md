@@ -32,11 +32,11 @@ You can install Hostspot on Windows from the command line with Administrator Pri
 
 - c:\hotspot\install\install.bat 
 
--check if the PATH  system enviroment variable has the following:
+- check if the PATH  system enviroment variable has the following:
 
 %APPDATA%\Roaming\npm;C:\Program Files\nodejs;C:\Program Files\Wireshark;c:\python37;c:\python37\Scripts;c:\python37\Lib\site-packages; 
 
-If not, run Powershell.exe -ExecutionPolicy bypass -File "c:\hotspot\Install\Install-Env.ps1"
+If not, run with admin privilages: Powershell.exe -ExecutionPolicy bypass -File "c:\hotspot\Install\Install-Env.ps1"
 
 
 #### 2- Open  regular Command Prompt (without Administrator Privileges), then run the following command:  
