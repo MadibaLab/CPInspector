@@ -33,7 +33,7 @@ from selenium.webdriver.firefox.firefox_profile import (
     AddonFormatError
 )
 
-#todo DFP does not work on VM
+
 
 import codecs
 import zipfile
@@ -419,6 +419,7 @@ def initiateWebDriver(type,browsertype):
   
     #add record to sitevisit table
     add_new_page(driver)
+
 
     #check if any cookies are written before user approval
     dump_profile_cookies('first')
@@ -1065,7 +1066,7 @@ def dump_Chrome_profile_cookies(stage):
 
     # Get the results
     if stage == 'first': #after execution of first page
-        rows = get_chrome_cookies(params["browser_profile_path"] + r"\default")
+        rows = get_chrome_cookies(os.path.join(params["browser_profile_path"], 'Default'))
     else:    
         rows = get_chrome_cookies(params["output_browser_profile"])
 
@@ -1328,6 +1329,7 @@ def get_chrome_cookies(profile_directory):
     if not os.path.isfile(cookie_db):
         print("cannot find cookies", cookie_db)
     else:
+        print (cookie_db)
         conn = sqlite3.connect(cookie_db)
         with conn:
             c = conn.cursor()
