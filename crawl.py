@@ -869,34 +869,42 @@ def Command_Manager():
 def validate():
     #todo chek the profile is copied
 
-    if params["criticalerror"]:
-           label1.configure(text="Important")
-           label4.configure(text="Critical Error occured during the data collection, this dataset should be discarded.")
-           return False
-    elif not os.path.exists(os.path.join(params["output_directory"],'agreement.html')):
+    if not os.path.exists(os.path.join(params["output_directory"],'agreement.html')):
            label1.configure(text="Important")
            label4.configure(text="Agreement was not captured, please manually upload it's HTML code as agreement.html  to output folder.")
            return False
     elif not os.path.exists(os.path.join(params["output_directory"],'params.json')):
            label1.configure(text="Important")
-           label4.configure(text="Critical Error occured during the data collection, this dataset should be discarded.")
+           label4.configure(text="params - Critical Error occured during the data collection, this dataset should be discarded.")
            return False
 
     elif not os.path.exists(os.path.join(params["output_directory"],'sslkeylog.log')):
            label1.configure(text="Important")
-           label4.configure(text="Critical Error occured during the data collection, this dataset should be discarded.")
+           label4.configure(text="sslkeylog - Critical Error occured during the data collection, this dataset should be discarded.")
            return False
 
     elif not os.path.exists(os.path.join(params["output_directory"],'traffic.pcap')):
            label1.configure(text="Important")
-           label4.configure(text="Critical Error occured during the data collection, this dataset should be discarded.")
+           label4.configure(text="Traffic.pcap - Critical Error occured during the data collection, this dataset should be discarded.")
            return False
     elif not os.path.exists(os.path.join(params["output_directory"],'Source Code')):
            label1.configure(text="Important")
-           label4.configure(text="Critical Error occured during the data collection, this dataset should be discarded.")
+           label4.configure(text="Source Code - Critical Error occured during the data collection, this dataset should be discarded.")
            return False
-
-
+    elif params["criticalerror"]:
+           label1.configure(text="Important")
+           label4.configure(text="session storage or local sotrage or chrome profile cookies,\nCritical Error occured during the data collection, this dataset should be discarded.")
+           return False
+    elif  params["browsertype"] !="Firefox":
+          if os.stat(os.path.join(params["output_directory"],'DFPM.log')).st_size == 0:
+              label1.configure(text="Important")
+              label4.configure(text="DFPM, Critical Error occured during the data collection, this dataset should be discarded.")
+              return False
+    elif  not os.path.exists(os.path.join(params["output_directory"],'Browser_Profile')): 
+               label1.configure(text="Important")
+               label4.configure(text="Browser Profile - Critical Error occured during the data collection, this dataset should be discarded.")
+               return False
+  
     return True
 
 
@@ -958,6 +966,7 @@ def dump_DFPM_to_db():
         cur = conn.cursor()
         with open(file) as f:
             for line in f:
+                try:
                     output = json.loads(line)
                     
                     for stack in output["stack"]:
@@ -978,6 +987,9 @@ def dump_DFPM_to_db():
                         insert_query_string = 'INSERT INTO DFPM_javascript (crawl_id, url,method,symbol,host,level,category,function_name,script_url,script_line,script_col) VALUES (?,?, ? , ? , ?,?,?,?,?,?,?)'
                         cur.execute(insert_query_string, (params["crawl_id"],output["url"], output["method"],output["path"],domain,output["level"],output["category"],stack["functionName"],stack["fileName"],stack["lineNumber"],stack["columnNumber"]))
 
+                except:
+                    continue
+                    
         cur.execute(" delete from DFPM_javascript"
                        " where rowid not in (select min(rowid)"
                        " from DFPM_javascript"
@@ -1060,50 +1072,54 @@ def dump_firefox_profile_cookies(stage):
 # dump_Chrome_profile_cookies
 #-----------------------------
 def dump_Chrome_profile_cookies(stage):
+    try:
+ 
+        # Connect to the Database
+        conn = sqlite3.connect(os.path.join(params["output_directory"],params["database_name"]))
+        cursor = conn.cursor()
 
+        # Get the results
+        if stage == 'first': #after execution of first page
+            rows = get_chrome_cookies(os.path.join(params["browser_profile_path"], 'Default'))
+        else:    
+            rows = get_chrome_cookies(params["output_browser_profile"])
 
-    # Connect to the Database
-    conn = sqlite3.connect(os.path.join(params["output_directory"],params["database_name"]))
-    cursor = conn.cursor()
-
-    # Get the results
-    if stage == 'first': #after execution of first page
-        rows = get_chrome_cookies(os.path.join(params["browser_profile_path"], 'Default'))
-    else:    
-        rows = get_chrome_cookies(params["output_browser_profile"])
-
-    #print (rows)
-    if rows is not None:
-        for row in rows:
-            # Decrypt the encrypted_value
-            host_key = row[0]
-            name = row[1]
-            value = row[2]
-            encrypted_value = row[3]
-            #source  https://n8henrie.com/2014/05/decrypt-chrome-cookies-with-python/
-            decrypted_value = win32crypt.CryptUnprotectData(encrypted_value, None, None, None, 0)[1].decode('utf-8') or value or 0
-            # Update the cookies with the decrypted value
-            # This also makes all session cookies persistent
-            cursor.execute("select 'x' from chrome_profile_cookies where crawl_id = ? and visit_id = ? and host_key=? and name=?", (params['crawl_id'],params["visit_id"],host_key,name))
-            data = cursor.fetchone()
-        
-            if data == None:
-                query = "INSERT INTO chrome_profile_cookies (crawl_id, visit_id, stage," \
-                         "host_key, name, value, encrypted_value, has_expires, expires_utc, is_persistent, "\
-                         "is_secure,is_httponly,last_access_utc,priority,creation_utc,path,firstpartyonly) VALUES "\
-                         "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
-                cursor.execute(query,((params['crawl_id'],params["visit_id"],stage) + row))
-                cursor.execute('\
-                        UPDATE chrome_profile_cookies SET decrypted_value = ?\
-                        WHERE host_key = ?\
-                        AND name = ?',
-                        (decrypted_value, host_key, name));
-
+        #print (rows)
+        if rows is not None:
+            for row in rows:
+                # Decrypt the encrypted_value
+                host_key = row[0]
+                name = row[1]
+                value = row[2]
+                encrypted_value = row[3]
+                #source  https://n8henrie.com/2014/05/decrypt-chrome-cookies-with-python/
+                decrypted_value = win32crypt.CryptUnprotectData(encrypted_value, None, None, None, 0)[1].decode('utf-8') or value or 0
+                # Update the cookies with the decrypted value
+                # This also makes all session cookies persistent
+                cursor.execute("select 'x' from chrome_profile_cookies where crawl_id = ? and visit_id = ? and host_key=? and name=?", (params['crawl_id'],params["visit_id"],host_key,name))
+                data = cursor.fetchone()
             
+                if data == None:
+                    query = "INSERT INTO chrome_profile_cookies (crawl_id, visit_id, stage," \
+                             "host_key, name, value, encrypted_value, has_expires, expires_utc, is_persistent, "\
+                             "is_secure,is_httponly,last_access_utc,priority,creation_utc,path,firstpartyonly) VALUES "\
+                             "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+                    cursor.execute(query,((params['crawl_id'],params["visit_id"],stage) + row))
+                    cursor.execute('\
+                            UPDATE chrome_profile_cookies SET decrypted_value = ?\
+                            WHERE host_key = ?\
+                            AND name = ?',
+                            (decrypted_value, host_key, name));
 
-    conn.commit()
-    conn.close()
+                
 
+        conn.commit()
+        conn.close()
+
+
+    except:
+        print ("critical: chrome cookies was not captured ")
+        params["criticalerror"] = True
 
 
 #------------------------------
@@ -1207,44 +1223,47 @@ def dump_js_Session_storage(driver, page_url):
 #-----------------------------
 
 def dump_js_local_storage(driver, page_url):
-
-    if driver.current_url.lower() == 'about:blank':
-        return
-   
-    scriptArray="""return Array.apply(0, new Array(localStorage.length)).map(function (o, i) { return localStorage.key(i) + ':::' + localStorage.getItem(localStorage.key(i)); })"""
-    result = driver.execute_script(scriptArray)
-    
-    conn = sqlite3.connect(os.path.join(params["output_directory"],params["database_name"]))
-    cur = conn.cursor()
-    
-    for item in result:
+    try:
+        if driver.current_url.lower() == 'about:blank':
+            return
+       
+        scriptArray="""return Array.apply(0, new Array(localStorage.length)).map(function (o, i) { return localStorage.key(i) + ':::' + localStorage.getItem(localStorage.key(i)); })"""
+        result = driver.execute_script(scriptArray)
         
-        key, value = item.split(':::', 1)
-        #extract domain name
-        parsed = urllib.parse.urlparse(page_url)
-        domain = parsed.hostname
-        if domain == None:
-            domain = page_url
-
-        cur.execute("select scope,key,value from js_localStorage where scope=? and key=? and visit_id =?", (domain,key,str(params['visit_id'])))
-        data = cur.fetchone()
+        conn = sqlite3.connect(os.path.join(params["output_directory"],params["database_name"]))
+        cur = conn.cursor()
         
-        if data == None:
-                
-             query = "INSERT INTO js_localStorage (crawl_id, visit_id, scope, key, value) "
-             query =    query +       "VALUES (" + str(params['crawl_id']) + "," + str(params['visit_id']) + ",'" + domain+ "','" +key+ "','" +value+ "')"
-             cur.execute(query)
+        for item in result:
+            
+            key, value = item.split(':::', 1)
+            #extract domain name
+            parsed = urllib.parse.urlparse(page_url)
+            domain = parsed.hostname
+            if domain == None:
+                domain = page_url
+
+            cur.execute("select scope,key,value from js_localStorage where scope=? and key=? and visit_id =?", (domain,key,str(params['visit_id'])))
+            data = cur.fetchone()
+            
+            if data == None:
+                    
+                 query = "INSERT INTO js_localStorage (crawl_id, visit_id, scope, key, value) "
+                 query =    query +       "VALUES (" + str(params['crawl_id']) + "," + str(params['visit_id']) + ",'" + domain+ "','" +key+ "','" +value+ "')"
+                 cur.execute(query)
 
 
-    cur.execute(" delete from js_localStorage"
-                   " where rowid not in (select min(rowid)"
-                   " from js_localStorage"
-                   " group by visit_id,scope,key);")
-         
-    # Close connection to db
-    conn.commit()
-    conn.close()
+        cur.execute(" delete from js_localStorage"
+                       " where rowid not in (select min(rowid)"
+                       " from js_localStorage"
+                       " group by visit_id,scope,key);")
+             
+        # Close connection to db
+        conn.commit()
+        conn.close()
 
+    except:
+        print ("critical: local storage was not captured ")
+        params["criticalerror"] = True
 
     
 

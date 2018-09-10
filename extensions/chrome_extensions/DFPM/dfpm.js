@@ -166,7 +166,7 @@ async function postJson(url, obj){
 }
 
 async function main(program){
-    ////console.log('Starting up dfpm...')
+    console.log('Starting up dfpm...')
     //handle logging
     eventEmitter.on("*",(obj)=>console.log(JSON.stringify(obj)))
     var logs = [];

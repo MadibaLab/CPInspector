@@ -17,8 +17,9 @@ First, download and install Git for windows. Use the default settings. It can be
 You can install Hostspot on Windows from the command line with Administrator Privileges.You can always go to the start button and type in "cmd". When the search results are displayed, right click over the command prompt and select the "run as administrator" option. 
 
 
+#### Installation Steps
 
-#### 1- Open  Command Prompt with Administrator Privileges then run the following command: 
+###### Open  Command Prompt with Administrator Privileges then run the following command: 
 
 
 - cd\
@@ -31,14 +32,19 @@ You can install Hostspot on Windows from the command line with Administrator Pri
 - c:\hotspot\install\install.bat 
 
 
-#### 2- Open  regular Command Prompt (without Administrator Privileges), then run the following command:  
+###### Open  regular Command Prompt (without Administrator Privileges), then run the following command:  
 
 - c:\hotspot\install\installDev.bat 
 
 - Restart the machine (VM if it is used).
 
 
-### Step3: Running the application
+### Step 3: 
+
+Download and install TMAC for windows  from 'https://technitium.com/tmac/. It is MAC address spoofing tool.
+
+
+### Step 4: Running the application
 
 ####  Visit any place that has a Public WIFI.
 
@@ -52,3 +58,30 @@ You can install Hostspot on Windows from the command line with Administrator Pri
 
 
 - A screen will open which guide you in the process of connecting to the internet using public WIFI. 
+
+- Enter or select the following information:
+
+###### Hotspot Name
+Enter the Hotspot Name, use the same name for all datasets.
+
+###### Hotspot Address
+Enter the Hotspot Address.
+
+###### Browser Type
+Select the browser type (Firefox or Chrome).
+
+###### Protection Method
+Select the extension that will be used for this purpose (Ghostery, Adblock Plus, Privacy Badger, Incognito) or None if you don't want to use any extension.
+
+###### Account Used
+Select the account used for connecting to the hotspot (i.e. Faceboox, LinkedIn) or None if no account was used. 
+
+
+- Spoof the 'Wireless Network Connection' Mac Address then Click Prepare button.
+
+
+
+
+
+
+
