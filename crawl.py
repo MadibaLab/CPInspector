@@ -368,6 +368,7 @@ def initiateWebDriver(type,browsertype):
         options.add_argument("user-data-dir=" + params["browser_profile_path"] ) #Path to your chrome profile
         options.add_argument("--disable-http2") 
         options.add_argument("start-maximized")
+        #options.add_argument("--disable-gpu")
         options.add_argument("--remote-debugging-port=9222") #http://www.assertselenium.com/java/list-of-chrome-driver-command-line-arguments/
         #add extensions 
         if type =='Ghostery':
@@ -1330,7 +1331,6 @@ def get_chrome_cookies(profile_directory):
     if not os.path.isfile(cookie_db):
         print("cannot find cookies", cookie_db)
     else:
-        print (cookie_db)
         conn = sqlite3.connect(cookie_db)
         with conn:
             c = conn.cursor()

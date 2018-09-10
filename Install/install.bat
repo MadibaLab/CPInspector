@@ -1,6 +1,20 @@
 @echo off
 echo.
 ==================================================================
+echo   node js
+===================================================================
+Msiexec  /i C:\Hotspot\Install\tools\node-v8.11.4-x64.msi  /qn
+powershell -command "Start-Sleep -s 300"
+
+npm i npm
+npm -i
+Echo Done
+
+
+
+@echo off
+echo.
+==================================================================
 echo   Python silent install
 ===================================================================
 start C:\Hotspot\install\tools\python-3.7.0-amd64.exe /quiet InstallAllUsers=1 PrependPath=1 Include_test=0 TargetDir=C:\python37
@@ -62,13 +76,6 @@ start /wait C:\Hotspot\Install\tools\WinPcap_4_1_3.exe /S
 Echo Done
 
 
-@echo off
-echo.
-==================================================================
-echo   node js
-===================================================================
-Msiexec  /i C:\Hotspot\Install\tools\node-v8.11.4-x64.msi  /qn
-Echo Done
 
 @echo off
 echo.

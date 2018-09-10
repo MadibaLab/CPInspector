@@ -1,11 +1,21 @@
 # Installation
-Currently, Hotspot has primarily been written and tested on windows 7 and windows 10 machines. The following sets of commands should enable it to run on a clean install of Windows10. you can use Oracle VM Virtualbox for this purpose.
+Currently, Hotspot has primarily been written and tested on windows 7 and windows 10 machines. The following sets of commands should enable it to run on a clean install of Windows10. you can use Oracle VM Virtualbox for this purpose.This vedio (https://www.youtube.com/watch?v=NGJqhSdytWs) can be used as a guidlines for how to install windows 10 on virtual box.
+
 
 
 
 ## Installation Instructions
 
-###### Open Command Prompt, then run the following commands:  
+
+#### Step 1: Install Git
+
+First, download and install Git for windows. Use the default settings.
+
+
+
+#### Step 2: Install Application
+
+######  Open Command Prompt with Administrator Privileges, then run the following command: 
 
 - cd\
 
@@ -15,10 +25,6 @@ Currently, Hotspot has primarily been written and tested on windows 7 and window
 
 Note: Git application can be downloaded from https://git-scm.com/download/win
 
-
-
-######  Open Command Prompt with Administrator Privileges, then run the following command: 
-
 - c:\hotspot\install\install.bat 
 
 
@@ -26,10 +32,10 @@ Note: Git application can be downloaded from https://git-scm.com/download/win
 
 - c:\hotspot\install\installDev.bat 
 
-- Restart the machine.
+- Restart the machine (VM if it is used).
 
 
-## Running the application
+## Step3: Running the application
 
 ######  Visit any place that has Public Wifi.
 
