@@ -42,7 +42,7 @@ You can install Hostspot on Windows from the command line with Administrator Pri
 
 ### Step 3: 
 
-Download and install TMAC for windows  from 'https://technitium.com/tmac/. It is MAC address spoofing tool.
+Download and install TMAC for windows  from 'https://technitium.com/tmac/. Technitium MAC Address Changer allows you to change (spoof) Media Access Control (MAC) Address of your Network Interface Card (NIC) instantly.
 
 
 ### Step 4: Running the application
