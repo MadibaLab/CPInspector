@@ -1,3 +1,3 @@
 # Hotspot
-A Chrome extension that intercepts cookies. 
+A Firefox extension that intercepts cookies. 
 
