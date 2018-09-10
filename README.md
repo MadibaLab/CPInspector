@@ -1,5 +1,5 @@
 # Installation
-Currently, Hotspot has primarily been written and tested on windows 7 and windows 10 machines. The following sets of commands should enable it to run on a clean install of Windows10. you can use Oracle VM Virtualbox for this purpose.This vedio (https://www.youtube.com/watch?v=NGJqhSdytWs) can be used as a guidlines for how to install windows 10 on virtual box.
+Currently, Hotspot has primarily been written and tested on windows 7 and windows 10 machines. The following sets of commands should enable it to run on a clean install of Windows10. You can use Oracle VM Virtualbox for this purpose.This vedio (https://www.youtube.com/watch?v=NGJqhSdytWs) can be used as a guidlines for how to install windows 10 on virtual box.
 
 
 
@@ -7,15 +7,20 @@ Currently, Hotspot has primarily been written and tested on windows 7 and window
 ## Installation Instructions
 
 
-#### Step 1: Install Git
+### Step 1: Install Git
 
-First, download and install Git for windows. Use the default settings.
+First, download and install Git for windows. Use the default settings. It can be downloaded from https://git-scm.com/download/win
 
 
+### Step 2: Install on Windows using the command line
 
-#### Step 2: Install Application
+You can install Hostspot on Windows from the command line with Administrator Privileges.You can always go to the start button and type in "cmd". When the search results are displayed, right click over the command prompt and select the "run as administrator" option. 
 
-######  Open Command Prompt with Administrator Privileges, then run the following command: 
+
+#### Installation Steps
+
+###### Open  Command Prompt with Administrator Privileges then run the following command: 
+
 
 - cd\
 
@@ -23,7 +28,6 @@ First, download and install Git for windows. Use the default settings.
 - git clone https://github.com/sali123/Hotspot/
 
 
-Note: Git application can be downloaded from https://git-scm.com/download/win
 
 - c:\hotspot\install\install.bat 
 
@@ -35,9 +39,9 @@ Note: Git application can be downloaded from https://git-scm.com/download/win
 - Restart the machine (VM if it is used).
 
 
-## Step3: Running the application
+### Step3: Running the application
 
-######  Visit any place that has Public Wifi.
+######  Visit any place that has a Public WIFI.
 
 
 - Open the IDLE program (Windows: Start ? All Programs ? Python 3.7 ? IDLE (Python GUI).
