@@ -326,7 +326,7 @@ def initiateWebDriver(type,browsertype):
         FP = getProfilePath(type,browsertype)
         profile= FirefoxProfile1(FP)
         #define binary location path
-        #binary = FirefoxBinary(params["root_dir"] + r'\browsers\Mozilla Firefox\firefox.exe')
+        binary = FirefoxBinary(params["root_dir"] + r'\browsers\Mozilla Firefox\firefox.exe')
         #set profile preferences
         profile.set_preference("network.http.spdy.enabled.http2", False)
         profile.set_preference("xpinstall.signatures.required", False)
@@ -349,9 +349,9 @@ def initiateWebDriver(type,browsertype):
         os.environ["PATH"] += os.pathsep +  params["root_dir"] + "\drivers\geckodriver.exe"
         executable_path = params["root_dir"] + "\drivers\geckodriver.exe"
         if type =='Incognito':
-            driver =webdriver.Firefox(firefox_profile=profile,firefox_options=options,  executable_path=executable_path)
+            driver =webdriver.Firefox(firefox_binary=binary,firefox_profile=profile,firefox_options=options,  executable_path=executable_path)
         else:
-            driver =webdriver.Firefox(firefox_profile=profile,  executable_path=executable_path)
+            driver =webdriver.Firefox(firefox_binary=binary,firefox_profile=profile,  executable_path=executable_path)
 
         #store log file in parameters, form this file we extract temp profile name
         params["driverlogpath"] =  params["output_directory"]   + "\geckodriver.log"
@@ -382,7 +382,7 @@ def initiateWebDriver(type,browsertype):
         options.add_extension(params["root_dir"] + "/extensions/chrome_extensions/DFPM_v1.15.crx")
         options.add_extension(params["root_dir"] + "/extensions/chrome_extensions/hotspot.crx")
         #define binary location path
-        #options.binary_location = params["root_dir"] + r'\browsers\Chrome\Application\Chrome.exe'
+        options.binary_location = params["root_dir"] + r'\browsers\Chrome\Application\Chrome.exe'
         #put driver path in environment variables
         executable_path = os.path.join(params["root_dir"] , "drivers","chromedriver.exe")
         os.environ["PATH"] += executable_path
@@ -405,12 +405,12 @@ def initiateWebDriver(type,browsertype):
         except:
             print("")
     else:
-        #initialize DFPM extension from command line, this will create DFPM.txt file in the output folder
-        dump_DFPM()
-        #driver.get("https://mcd-e.datavalet.io/E4358CA832CB4C96A2BCB1C546DF64B7/FC0BEDA4DB49483BADEA173EBE1E0FD0/bG9naW5fdXJsPWh0dHBzJTNBJTJGJTJGbjgxLm5ldHdvcmstYXV0aC5jb20lMkZzcGxhc2glMkZsb2dpbiUzRm1hdXRoJTNETU11Vmt2R0JacGNFY1dDV1hkTzVxZXBGWGNkSDVaOS1JYzhGc2xEZDAwU04tamlSSjlkeHR1OERMd1lhRnQwT1hJQWRmOTFfYzhaallQa3lmYUY5RHg2b0dZUkVhWUh5a1FBeVROS2I1R0x1bW5jdk5RRExNdmlBS0lOa3psNUdWV2x2SktMdzJDbW1yZmRDUFliYm1ac29PZTBGaFIwWlJNLUkzSk9PcEFmek1Ud09ZQWlpaDBLMUx6RXg0aFFBSUk0cWkyZzdKVUhIQSUyNmNvbnRpbnVlX3VybCUzRGh0dHAlMjUzQSUyNTJGJTI1MkZ3d3cubWNkb25hbGRzLmNhJTI1MkYmY29udGludWVfdXJsPWh0dHAlM0ElMkYlMkZ3d3cubWNkb25hbGRzLmNhJTJGJmFwX21hYz04OCUzQTE1JTNBNDQlM0FhYSUzQTkxJTNBMDUmYXBfbmFtZT1NQ0QtUUMtTEFTLTAyMzc5LVdBUDEmYXBfdGFncz0mY2xpZW50X21hYz0wMiUzQWUwJTNBZTMlM0FmMiUzQTUyJTNBYWYmY2xpZW50X2lwPTE5Mi4xNjguMjU1LjE3NA==/fr/welcome.html")
+##        #initialize DFPM extension from command line, this will create DFPM.txt file in the output folder
+##        dump_DFPM()
+##        #driver.get("https://mcd-e.datavalet.io/E4358CA832CB4C96A2BCB1C546DF64B7/FC0BEDA4DB49483BADEA173EBE1E0FD0/bG9naW5fdXJsPWh0dHBzJTNBJTJGJTJGbjgxLm5ldHdvcmstYXV0aC5jb20lMkZzcGxhc2glMkZsb2dpbiUzRm1hdXRoJTNETU11Vmt2R0JacGNFY1dDV1hkTzVxZXBGWGNkSDVaOS1JYzhGc2xEZDAwU04tamlSSjlkeHR1OERMd1lhRnQwT1hJQWRmOTFfYzhaallQa3lmYUY5RHg2b0dZUkVhWUh5a1FBeVROS2I1R0x1bW5jdk5RRExNdmlBS0lOa3psNUdWV2x2SktMdzJDbW1yZmRDUFliYm1ac29PZTBGaFIwWlJNLUkzSk9PcEFmek1Ud09ZQWlpaDBLMUx6RXg0aFFBSUk0cWkyZzdKVUhIQSUyNmNvbnRpbnVlX3VybCUzRGh0dHAlMjUzQSUyNTJGJTI1MkZ3d3cubWNkb25hbGRzLmNhJTI1MkYmY29udGludWVfdXJsPWh0dHAlM0ElMkYlMkZ3d3cubWNkb25hbGRzLmNhJTJGJmFwX21hYz04OCUzQTE1JTNBNDQlM0FhYSUzQTkxJTNBMDUmYXBfbmFtZT1NQ0QtUUMtTEFTLTAyMzc5LVdBUDEmYXBfdGFncz0mY2xpZW50X21hYz0wMiUzQWUwJTNBZTMlM0FmMiUzQTUyJTNBYWYmY2xpZW50X2lwPTE5Mi4xNjguMjU1LjE3NA==/fr/welcome.html")
         driver.get("http://gstatic.com/generate_204")
         #todo check if this works http://www.msftncsi.com/ncsi.txt
-        #driver.get("https://walmart.ca")
+       # driver.get("https://walmart.ca")
 
     #save first page open in the browser as Captive portal welcome page
     params["WelcomePageURL"] = driver.current_url
@@ -482,6 +482,10 @@ def Create_outputfolders():
     params["output_browser_profile"] = browser_profile
 
 
+    if params["browsertype"] !="Firefox":
+        #initialize DFPM extension from command line, this will create DFPM.txt file in the output folder
+        dump_DFPM()
+
  
 #------------------------------
 # find_Wireless_Interface
@@ -489,7 +493,7 @@ def Create_outputfolders():
 def find_Wireless_Interface():
     interface = "-1"
     ethernet = "-1" #for VM
-    
+    wifi     = "-1" #for Windows 10
     args  = ["tshark", "-D"]
     p = subprocess.Popen(args , stdout=subprocess.PIPE, shell=True) ## Talk with date command i.e. read data from stdout and stderr. Store this info in tuple ##
     (output, err) = p.communicate() ## Wait for date to terminate. Get return returncode ##
@@ -499,15 +503,21 @@ def find_Wireless_Interface():
         item = item.strip()
         if not item:
             continue
-        if 'Wireless' in item:
+        if params["wireless_adapter"] in item:
             interface = str(idx)
+            
+        if 'Wi-Fi' in item:
+            wifi = str(idx)
+            
         if 'Ethernet' in item:
             ethernet = str(idx)
         idx = idx + 1    
 
 
     if  interface == "-1":
-        if  ethernet != "-1":
+        if wifi != "-1":
+            interface = wifi
+        elif  ethernet != "-1":
             interface = ethernet
         else:
             raise IOError('No Installed wireless or Ethernet Interface for capturing traffic')
@@ -549,9 +559,15 @@ def validateGUI():
         if email_text.get() =="":
             error_message = error_message +  "\nSpecify Account Email."
 
+    if params["step"] == "Finish":
+        if location.get() == 0:
+           error_message = "'Have you authorize the service to track your location?' is required."
+
     return error_message
        
 
+
+ 
 #------------------------------
 # add_new_page
 #-----------------------------
@@ -647,10 +663,21 @@ def save_hotspot_params(url):
 
         hotspot_params["UsedAccount"] = chkAccount.get()
 
-     
-        hotspot_params["Account_Email"] = email_text.get()
         
         hotspot_params["Critical_Error"] =  params["criticalerror"]
+
+        hotspot_params["Upload_Polisis"]  = params["Upload_Polisis"] 
+
+        hotspot_params["comments"] = text_comments.get("1.0",END)
+
+
+        if location.get() == 1:
+            hotspot_params["geoloc_permission"] =  "Yes"
+        else:
+            hotspot_params["geoloc_permission"] =  "No"
+            
+
+        
         
         with open('params.json', 'w') as outfile:
             json.dump(hotspot_params, outfile)
@@ -748,13 +775,13 @@ def Command_Manager():
         res = messagebox.askquestion("Spoof Mac Address", "Did you spoof the Mac Address for your 'Wireless Network Connection'?\n\nYou can spoof mac address using the TMAC tool.\nIt is available for download from 'https://technitium.com/tmac/'")
 
         if res == 'yes':
-            b1_text.set("Start")
+            b1_text.set("Start Registration")
             params["step"] = "Start"
             params["browsertype"] = dropbrowser.get()
 
             #initialize the user help  fields      
             label1.configure(text="Captive Portal - Important Guidelines:")
-            label2.configure(text="1. Select you desired WIFI then click Start.\n2. Don't click the 'Start' button until your system prompt to login.\n3. Do not refresh the browser at any case.\n4. Always wait till the website is loaded completely before taking any action.\n5. Close all browsers on your machine/VM (if any) while the application is running.\n6. Click 'Save Content' for any url loaded into the browser other than the 'Welcome page' and 'Landing page' (e.g. Facebook login page)\n7. Repeat data collection incase of any error (i.e loosing connectivitiy with Captive Portal)")
+            label2.configure(text="1. Select you desired WIFI then click 'Start Registration'.\n2. Don't click the 'Start Registration' button until your system prompt to login.\n3. Do not refresh the browser at any case.\n4. Always wait till the website is loaded completely before taking any action.\n5. Close all browsers on your machine/VM (if any) while the application is running.\n6. Click 'Save Content' for any url loaded into the browser other than the 'Welcome page' and 'Landing page' (e.g. Facebook login page)\n7. Repeat data collection incase of any error (i.e loosing connectivitiy with Captive Portal)")
             e1.configure(state="disabled")
             e2.configure(state="disabled")
             list1.configure(state="disabled")
@@ -790,6 +817,8 @@ def Command_Manager():
         #show 'save content' button
         b2.grid(row=30, column=1)
     elif params["step"] == "Finish":
+
+   
         #Reset the user help  fields      
         label1.configure(text="")
         label2.configure(text="")
@@ -1548,6 +1577,7 @@ def save_agreement(driver):
         f.write(driver.page_source.encode('utf8'))
         f.write(b'\n')
 
+    params["Upload_Polisis"] = True
 
 
 #---------------------------
@@ -1559,13 +1589,15 @@ def add_policy():
 
    url = params["WelcomePageURL"]
 
+   params["Upload_Polisis"] = False
+
    if url != "":
         #use firefox to add policy
-        #executable_path = params["root_dir"] + r'\browsers\Mozilla Firefox\firefox.exe'
-        #binary = FirefoxBinary(executable_path)
+        executable_path = params["root_dir"] + r'\browsers\Mozilla Firefox\firefox.exe'
+        binary = FirefoxBinary(executable_path)
         executable_path = params["root_dir"] + "\drivers\geckodriver.exe"
 
-        driver =webdriver.Firefox(executable_path=executable_path)
+        driver =webdriver.Firefox(firefox_binary=binary,executable_path=executable_path)
         try:
             driver.maximize_window() #maximize the
         except:
@@ -1613,7 +1645,6 @@ def add_policy():
 
 
 
-
 #-----------------------------------
 # Create UI
 #-----------------------------------
@@ -1621,8 +1652,11 @@ def add_policy():
 window = Tk()
 Large_font  = ("Vernada",12)
 window.title("Collect Hotspot Data")
-window.geometry("800x500")
+#window.geometry("800x500")
+#window.attributes('-fullscreen', True)
 
+w,h = window.winfo_screenwidth() - 300, window.winfo_screenheight() -100
+window.geometry("%dx%d+0+0" % (w, h))
 
 helv10 = font.Font(family='Helvetica', size=10)
 helv12 = font.Font(family='Helvetica', size=12)
@@ -1656,6 +1690,13 @@ l1.grid(sticky = W,row=5,column=0, padx=5, pady=5)
 
 l1 = ttk.Label(window, text="Used Account:" , style="BW.TLabel",width=15, justify=LEFT)
 l1.grid(sticky = W,row=6,column=0, padx=5, pady=5)
+
+l1 = ttk.Label(window, text="Have you authorize the service to track your location?" , style="BW.TLabel",width=42, justify=LEFT)
+l1.grid(sticky = W,row=7,column=0, padx=5, pady=5, columnspan=2)
+
+l1 = ttk.Label(window, text="Comments:" , style="BW.TLabel",width=15, justify=LEFT)
+l1.grid(sticky = NW,row=8,column=0, padx=5, pady=5,columnspan=1)
+
 
 
 
@@ -1707,12 +1748,49 @@ def change_dropdown(*args):
 # link function to change dropdown
 chkAccount.trace('w', change_dropdown)
 
+
+#draw location options
+location = IntVar()
+
+Radiobutton(window, text="Yes", variable=location, value=1).grid(row = 7,column=2, padx = 10, pady = 2, sticky=W)
+
+Radiobutton(window, text="No", variable=location, value=2).grid(row = 7,column=3, padx = 10, pady = 2, sticky=W)
+#location.grid(sticky = E,row=7,column=1)
+
+
+text_comments = Text(window, height=7, width=50)
+scroll = Scrollbar(window, command=text_comments.yview)
+
+text_comments.configure(yscrollcommand=scroll.set)
+
+text_comments.tag_configure('bold_italics', 
+                   font=('Verdana', 12, 'bold', 'italic'))
+
+text_comments.tag_configure('big', 
+                   font=('Verdana', 24, 'bold'))
+text_comments.tag_configure('color', 
+                   foreground='blue', 
+                   font=('Tempus Sans ITC', 14))
+                   
+text_comments.tag_configure('groove', 
+                   relief=GROOVE, 
+                   borderwidth=2)
+                   
+text_comments.tag_bind('bite', 
+              '<1>', 
+              lambda e, t=text_comments: t.insert(END, "Text"))
+
+#text.pack(side=LEFT)
+text_comments.grid(sticky = W,row=8,column=1)
+#scroll.pack(side=RIGHT, fill=Y)
+
+
 email_text = StringVar()
 e3=Entry(window,textvariable=email_text,width=40)
 
 
 label0 = ttk.Label(window, text="")
-label0.grid(row=7,column=1)
+label0.grid(row=9,column=1)
 
 #draw buttons
 b1_text = tk.StringVar()
@@ -1735,21 +1813,19 @@ b2_text.set("Save Content")
 b2.grid_remove()
 
 
-
-
 label1 = ttk.Label(window, text="")
 label1.grid(row=21,column=1)
 label1.configure(foreground="red", font=helv12)
 
 label2 = ttk.Label(window, text="", font=helv10)
-label2.grid(row=22,column=0,columnspan=2)
+label2.grid(row=22,column=0,columnspan=4)
 
 label4 = ttk.Label(window, text="", font=helv10)
 label4.grid(row=31,column=1)
 label4.configure(foreground="red", font=helv12)
 
 
-label3.configure(text="Using a Captive Portal to access the Public Internet")
+label3.configure(text="Cawl into Public Captive Portal")
 
 l1 = ttk.Label(window, text="")
 l1.grid(row=32,column=0, padx=5, pady=5)

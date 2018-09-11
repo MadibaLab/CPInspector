@@ -1,2 +1,2 @@
 {
-"crawl_id": "1", "rootPath":  "C:\\Hotspot\\", "SSLKeyLogPath":  "C:\\Hotspot\\" ,   "database_name": "crawl-data.sqlite","Extract_links": "True","Add_Policy": "True"}
+"crawl_id": "1", "rootPath":  "C:\\Hotspot\\", "SSLKeyLogPath":  "C:\\Hotspot\\" ,   "database_name": "crawl-data.sqlite","Extract_links": "True","Add_Policy": "True", "wireless_adapter":"Wireless"}

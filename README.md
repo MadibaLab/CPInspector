@@ -1,7 +1,8 @@
 # Installation
 Hotspots are physical locations where people can gain internet access through a Wi-Fi connection.
 
-Currently, Hotspot application has primarily been written and tested on windows 7 and windows 10 machines. The following sets of commands should enable it to run on a clean install of Windows10. You can use Oracle VM Virtualbox for this purpose.This vedio (https://www.youtube.com/watch?v=NGJqhSdytWs) can be used as a guidlines for how to install windows 10 on virtual box.
+Currently, Hotspot application has primarily been written and tested on windows 7 and windows 10 machines. 
+
 
 
 
@@ -32,11 +33,15 @@ You can install Hostspot on Windows from the command line with Administrator Pri
 
 - c:\hotspot\install\install.bat 
 
-- check if the PATH  system enviroment variable has the following:
+
+
+
+###### check if the PATH  system enviroment variable has the following:
 
 %APPDATA%\Roaming\npm;C:\Program Files\nodejs;C:\Program Files\Wireshark;c:\python37;c:\python37\Scripts;c:\python37\Lib\site-packages; 
 
 If not, run with admin privilages: Powershell.exe -ExecutionPolicy bypass -File "c:\hotspot\Install\Install-Env.ps1"
+
 
 
 #### 2- Open  regular Command Prompt (without Administrator Privileges), then run the following command:  
@@ -46,14 +51,29 @@ If not, run with admin privilages: Powershell.exe -ExecutionPolicy bypass -File 
 - Restart the machine (VM if it is used).
 
 
-### Step 3: 
+### Step 3: Install a Mac Spoofing application
 
 Download and install TMAC for windows  from 'https://technitium.com/tmac/. Technitium MAC Address Changer allows you to change (spoof) Media Access Control (MAC) Address of your Network Interface Card (NIC) instantly.
 
 
-### Step 4: Running the application
 
-####  Visit any place that has a Public WIFI.
+### Step 4: Check Wi-Fi Adapter Name
+
+1- In the Control Panel, you can click on the Network and Internet category and then click on Network and Sharing Center. If you are in icon view, just click directly on Network and Sharing Center.
+
+2- Click "Stange adapter setting" to check the name of your wireless adapter. 
+
+3- If the name of the adapter does not contains the word "Wireless" or "Wi-Fi" or "ethernet", copy your wirless adapter name, then open the file c:\hotspot\params.json.
+
+4- Update the "wireless_adapter"  key value to your adapter name 
+
+(i.e. "wireless_adapter":"<my adapter name goes here>"
+
+
+
+### Step 5: Running the application
+
+####  Visit any place that has a Public Wi-Fi.
 
 
 - Open the IDLE program (Windows: Start ? All Programs ? Python 3.7 ? IDLE (Python GUI).
@@ -90,7 +110,7 @@ Download and install TMAC for windows  from 'https://technitium.com/tmac/. Techn
 
 - Connecting to the desired WiFi from the bottom right corner of your screen.
 
-- When the windows notified you that you have limited connictivity, and you need further authentication. click Start button.
+- When the windows notified you that you have limited connictivity, and you need further authentication. click 'Start Registration' button.
 
 - The browser will load the captive portal. go through the  connect to the internet wizard taking into consideration the below guidlines:
 

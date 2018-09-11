@@ -32,29 +32,6 @@ Echo Done
 
 
 
-@echo off
-echo.
-==================================================================
-echo   firefox silent install
-===================================================================
-start C:\hotspot\install\tools\FirefoxSetup60.2.0esr.exe /S 
-Echo Done
-
-
-
-
-@echo off
-echo.
-==================================================================
-echo   Chrome silent install
-===================================================================
-
-Msiexec /i "C:\hotspot\install\tools\googlechromestandaloneenterprise64.msi"  /qn
-
-Echo Done
-
-
-
 
 @echo off
 echo.
