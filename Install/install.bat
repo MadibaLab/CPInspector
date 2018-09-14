@@ -4,7 +4,7 @@ echo.
 echo   node js
 ===================================================================
 Msiexec  /i C:\Hotspot\Install\tools\node-v8.11.4-x64.msi  /qn
-powershell -command "Start-Sleep -s 300"
+powershell -command "Start-Sleep -s 120"
 
 Echo Done
 
@@ -15,20 +15,13 @@ echo.
 ==================================================================
 echo   Python silent install
 ===================================================================
-start C:\Hotspot\install\tools\python-3.7.0-amd64.exe /quiet InstallAllUsers=1 PrependPath=1 Include_test=0 TargetDir=C:\python37
+start C:\Hotspot\install\tools\python-3.7.0-amd64.exe /quiet InstallAllUsers=1 PrependPath=1 Include_test=0 
 powershell -command "Start-Sleep -s 120"
 Echo Done
 
 
 
-@echo off
-echo.
-==================================================================
-echo   Wireshark silent install
-===================================================================
-Powershell.exe -ExecutionPolicy bypass -File "c:\hotspot\Install\Install-Wireshark.ps1" 
-powershell -command "Start-Sleep -s 120"
-Echo Done
+
 
 
 
@@ -39,6 +32,8 @@ echo.
 echo   Wireshark silent install
 ===================================================================
 start /wait C:\Hotspot\Install\tools\Wireshark-win64-2.6.2.exe /S 
+
+powershell -command "Start-Sleep -s 120"
 Echo Done
 
 

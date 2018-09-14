@@ -34,6 +34,7 @@ from selenium.webdriver.firefox.firefox_profile import (
 )
 
 
+import webbrowser
 
 import codecs
 import zipfile
@@ -365,6 +366,14 @@ def initiateWebDriver(type,browsertype):
 
         #set profile preferences
         options = webdriver.ChromeOptions()
+        desired = DesiredCapabilities.CHROME
+#        perfLogPrefs = ChromePerformanceLoggingPreferences
+##        perfLogPrefs.AddTracingCategories( { "devtools.network" })
+##        options.PerformanceLoggingPreferences = perfLogPrefs
+##        options.AddAdditionalCapability(CapabilityType.EnableProfiling, true, true)
+##        options.SetLoggingPreference("performance", LogLevel.All)
+        desired['loggingPrefs'] = {'browser':'ALL','performance':'ALL', 'network':'ALL' }
+
         options.add_argument("user-data-dir=" + params["browser_profile_path"] ) #Path to your chrome profile
         options.add_argument("--disable-http2") 
         options.add_argument("start-maximized")
@@ -386,7 +395,7 @@ def initiateWebDriver(type,browsertype):
         #put driver path in environment variables
         executable_path = os.path.join(params["root_dir"] , "drivers","chromedriver.exe")
         os.environ["PATH"] += executable_path
-        driver = webdriver.Chrome(executable_path=executable_path, chrome_options=options)
+        driver = webdriver.Chrome(executable_path=executable_path, chrome_options=options,desired_capabilities=desired)
 
        
     #save session variables
@@ -401,23 +410,20 @@ def initiateWebDriver(type,browsertype):
         #driver.get("https://walmart.ca")
         #this code will work only on firefox
         try:
-            driver.maximize_window() #maximize the
+            driver.manage().window().maximize() #maximize the window
+            #todo this is does not work on windows10
         except:
             print("")
     else:
-##        #initialize DFPM extension from command line, this will create DFPM.txt file in the output folder
-##        dump_DFPM()
 ##        #driver.get("https://mcd-e.datavalet.io/E4358CA832CB4C96A2BCB1C546DF64B7/FC0BEDA4DB49483BADEA173EBE1E0FD0/bG9naW5fdXJsPWh0dHBzJTNBJTJGJTJGbjgxLm5ldHdvcmstYXV0aC5jb20lMkZzcGxhc2glMkZsb2dpbiUzRm1hdXRoJTNETU11Vmt2R0JacGNFY1dDV1hkTzVxZXBGWGNkSDVaOS1JYzhGc2xEZDAwU04tamlSSjlkeHR1OERMd1lhRnQwT1hJQWRmOTFfYzhaallQa3lmYUY5RHg2b0dZUkVhWUh5a1FBeVROS2I1R0x1bW5jdk5RRExNdmlBS0lOa3psNUdWV2x2SktMdzJDbW1yZmRDUFliYm1ac29PZTBGaFIwWlJNLUkzSk9PcEFmek1Ud09ZQWlpaDBLMUx6RXg0aFFBSUk0cWkyZzdKVUhIQSUyNmNvbnRpbnVlX3VybCUzRGh0dHAlMjUzQSUyNTJGJTI1MkZ3d3cubWNkb25hbGRzLmNhJTI1MkYmY29udGludWVfdXJsPWh0dHAlM0ElMkYlMkZ3d3cubWNkb25hbGRzLmNhJTJGJmFwX21hYz04OCUzQTE1JTNBNDQlM0FhYSUzQTkxJTNBMDUmYXBfbmFtZT1NQ0QtUUMtTEFTLTAyMzc5LVdBUDEmYXBfdGFncz0mY2xpZW50X21hYz0wMiUzQWUwJTNBZTMlM0FmMiUzQTUyJTNBYWYmY2xpZW50X2lwPTE5Mi4xNjguMjU1LjE3NA==/fr/welcome.html")
         driver.get("http://gstatic.com/generate_204")
+        #driver.get("http://www.msftncsi.com/ncsi.txt")
         #todo check if this works http://www.msftncsi.com/ncsi.txt
        # driver.get("https://walmart.ca")
 
     #save first page open in the browser as Captive portal welcome page
     params["WelcomePageURL"] = driver.current_url
  
-##    logs = driver.get_log('browser')
-##    for log in logs:
-##        print(str(log))
   
     #add record to sitevisit table
     add_new_page(driver)
@@ -645,7 +651,7 @@ def dump_browser_profile():
 #------------------------------
 # save_hotspot_params
 #-----------------------------
-def save_hotspot_params(url):
+def save_hotspot_params(url,file_name):
     try:
         
        # save output  jason file
@@ -666,7 +672,8 @@ def save_hotspot_params(url):
         
         hotspot_params["Critical_Error"] =  params["criticalerror"]
 
-        hotspot_params["Upload_Polisis"]  = params["Upload_Polisis"] 
+        if 'Upload_Polisis'  in params:
+            hotspot_params["Upload_Polisis"]  = params["Upload_Polisis"] 
 
         hotspot_params["comments"] = text_comments.get("1.0",END)
 
@@ -679,7 +686,7 @@ def save_hotspot_params(url):
 
         
         
-        with open('params.json', 'w') as outfile:
+        with open(file_name + '.json', 'w') as outfile:
             json.dump(hotspot_params, outfile)
     except:
         print ("critical: hotspot parameteres are not saved")
@@ -743,6 +750,8 @@ def dump_all_final_data():
     #extract all links from page
     extract_links(driver2)
 
+    #dump params.json file  
+    save_hotspot_params(params["landingpage"],"temp_params")
 
     #kill webdriver
     kill_webdriver(driver2)
@@ -829,13 +838,16 @@ def Command_Manager():
             b1_text.set("Add Policy")
             params["step"] = "Addpolicy"
             label1.configure(text="Captive Portal Policy Collection Guidelines:")
-            label2.configure(text="The application will try to upload the policy to Polisis website.\nIf that failed for any reason, please save the policy html code to agreement.html in the output folder.\n\nNote: the system will use Firfox browser to upload the policy.")
+            label2.configure(text="The application will try to upload the policy to Polisis website.\nIf that failed for any reason, please save the policy html code to agreement.html in the output folder.\n\nNote: The system will use Firfox browser to upload the policy.")
+         
         else:
             #direct the user to verify stage
             b1_text.set("Verify")
             params["step"] = "verify"
             
         chkAccountlist.configure(state="disabled")
+        #location.configure(state="disabled")
+        text_comments.configure(state="disabled")
         #hide 'save content' button
         b2.grid_remove() 
 
@@ -871,14 +883,14 @@ def Command_Manager():
         label2.configure(text="")
         label4.configure(text="")
         try: 
-           driver2 = create_driver_session(params["session_id"], params["executor_url"])
-           kill_webdriver(driver2)
+            driver2 = create_driver_session(params["session_id"], params["executor_url"])
+            kill_webdriver(driver2)
         except:
             print ("")
 
         if validate():
           #dump params.json file  
-          save_hotspot_params(params["landingpage"])
+          save_hotspot_params(params["landingpage"],"params")
           b1_text.set("Complete")
           params["step"] = "complete"
             
@@ -900,7 +912,7 @@ def validate():
 
     if not os.path.exists(os.path.join(params["output_directory"],'agreement.html')):
            label1.configure(text="Incomplete Dataset")
-           label4.configure(text="Agreement was not captured, please manually upload it's HTML code as agreement.html  to output folder.")
+           label4.configure(text="Agreement was not captured, please manually upload it's HTML code as agreement.html  to output folder.\nTo read agreement, you can click the below button to try to open captive portal welcome page. " )
            return False
     elif not os.path.exists(os.path.join(params["output_directory"],'sslkeylog.log')):
            label1.configure(text="Incomplete Dataset")
@@ -936,8 +948,19 @@ def validate():
 # kill_webdriver
 #-----------------------------
 def kill_webdriver(driver):
-    driver.close() 
+    try:
+        driver.close() 
+    except:
+        print("")
 
+    browserExe = "firefox.exe"
+    os.system("taskkill /f /im "+browserExe)
+    
+    browserExe = "chrome.exe" 
+    os.system("taskkill /f /im "+browserExe)
+
+    browserExe = "iexplore.exe" 
+    os.system("taskkill /f /im "+browserExe)
 
     browserExe = "geckodriver.exe" 
     os.system("taskkill /f /im "+browserExe)
@@ -946,11 +969,6 @@ def kill_webdriver(driver):
     browserExe = "chromedriver.exe" 
     os.system("taskkill /f /im "+browserExe)
 
-    browserExe = "firefox.exe"
-    os.system("taskkill /f /im "+browserExe)
-    
-    browserExe = "chrome.exe" 
-    os.system("taskkill /f /im "+browserExe)
 
 
     #delete profile path if not deleted
@@ -1585,7 +1603,7 @@ def save_agreement(driver):
 #---------------------------
 def add_policy():
 
-    # add policy to polisis
+   # add policy to polisis
 
    url = params["WelcomePageURL"]
 
@@ -1638,9 +1656,8 @@ def add_policy():
 
         except:
             label1.configure(text="Incomplete Dataset")
-            label4.configure(text="Agreement was not captured, please manually upload it's HTML code as agreement.html  to output folder. ")
-
-
+            label4.configure(text="Agreement was not captured, please manually upload it's HTML code as agreement.html  to output folder.\nTo read the agreement, you can click the below button to try to open the captive portal welcome page. " )
+            btn_welcome_page.grid(row=32, column=1)
 
 
 
@@ -1821,18 +1838,27 @@ label2 = ttk.Label(window, text="", font=helv10)
 label2.grid(row=22,column=0,columnspan=4)
 
 label4 = ttk.Label(window, text="", font=helv10)
-label4.grid(row=31,column=1)
+label4.grid(row=31,column=1,columnspan=4)
 label4.configure(foreground="red", font=helv12)
 
 
-label3.configure(text="Cawl into Public Captive Portal")
+def openweb():
+    webbrowser.open(params["WelcomePageURL"])
+
+btn_welcome_page = Button(window, text = "Open Captive Portal Welcome Page",command=openweb, bg="blue", fg="white")
+
+btn_welcome_page.grid(row=32,column=0)
+btn_welcome_page.grid_remove()
+
+label3.configure(text="Cawl into Public Captive Portals")
 
 l1 = ttk.Label(window, text="")
-l1.grid(row=32,column=0, padx=5, pady=5)
+l1.grid(row=33,column=0, padx=5, pady=5)
+
 label5 = ttk.Label(window, text="")
-label5.grid(row=33,column=0)
+label5.grid(row=34,column=0)
 label6 = ttk.Label(window, text="", font=helv12)
-label6.grid(row=33,column=1, padx=5, pady=5)
+label6.grid(row=34,column=1, padx=5, pady=5,columnspan=3)
 
 
 window.mainloop()
