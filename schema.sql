@@ -8,7 +8,7 @@
 
 CREATE TABLE IF NOT EXISTS crawl (
     crawl_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    screen_res TEXT,
+    upload_crawl_id integer,
     finished BOOLEAN NOT NULL DEFAULT 0,
     start_time DATETIME DEFAULT CURRENT_TIMESTAMP);
 
@@ -46,6 +46,8 @@ CREATE TABLE IF NOT EXISTS firefox_profile_cookies (
     accessed INTEGER,
     creationTime INTEGER,
     isSecure INTEGER,
+    InbrowserElement Integer,
+    samesite integer,
     isHttpOnly INTEGER, stage text);
 
 CREATE TABLE IF NOT EXISTS chrome_profile_cookies (
@@ -98,7 +100,7 @@ CREATE TABLE IF NOT EXISTS js_localStorage (
     visit_id INTEGER NOT NULL,
     scope TEXT,
     KEY TEXT,
-    value TEXT,
+    value TEXT, stage text,
     FOREIGN KEY(crawl_id) REFERENCES crawl(id));
 
 
@@ -157,4 +159,8 @@ CREATE TABLE DFPM_javascript (
 
 
 
-CREATE TABLE IF NOT EXISTS links_found (found_on TEXT,location TEXT);
+CREATE TABLE IF NOT EXISTS links_found (
+    crawl_id INTEGER ,
+    visit_id INTEGER ,
+    found_on TEXT,
+    location TEXT);

@@ -412,7 +412,7 @@ def initiateWebDriver(type,browsertype):
         try:
             driver.manage().window().maximize() #maximize the window
             #todo this is does not work on windows10
-        except:
+        except Exception as e:
             print("")
     else:
 ##        #driver.get("https://mcd-e.datavalet.io/E4358CA832CB4C96A2BCB1C546DF64B7/FC0BEDA4DB49483BADEA173EBE1E0FD0/bG9naW5fdXJsPWh0dHBzJTNBJTJGJTJGbjgxLm5ldHdvcmstYXV0aC5jb20lMkZzcGxhc2glMkZsb2dpbiUzRm1hdXRoJTNETU11Vmt2R0JacGNFY1dDV1hkTzVxZXBGWGNkSDVaOS1JYzhGc2xEZDAwU04tamlSSjlkeHR1OERMd1lhRnQwT1hJQWRmOTFfYzhaallQa3lmYUY5RHg2b0dZUkVhWUh5a1FBeVROS2I1R0x1bW5jdk5RRExNdmlBS0lOa3psNUdWV2x2SktMdzJDbW1yZmRDUFliYm1ac29PZTBGaFIwWlJNLUkzSk9PcEFmek1Ud09ZQWlpaDBLMUx6RXg0aFFBSUk0cWkyZzdKVUhIQSUyNmNvbnRpbnVlX3VybCUzRGh0dHAlMjUzQSUyNTJGJTI1MkZ3d3cubWNkb25hbGRzLmNhJTI1MkYmY29udGludWVfdXJsPWh0dHAlM0ElMkYlMkZ3d3cubWNkb25hbGRzLmNhJTJGJmFwX21hYz04OCUzQTE1JTNBNDQlM0FhYSUzQTkxJTNBMDUmYXBfbmFtZT1NQ0QtUUMtTEFTLTAyMzc5LVdBUDEmYXBfdGFncz0mY2xpZW50X21hYz0wMiUzQWUwJTNBZTMlM0FmMiUzQTUyJTNBYWYmY2xpZW50X2lwPTE5Mi4xNjguMjU1LjE3NA==/fr/welcome.html")
@@ -436,7 +436,7 @@ def initiateWebDriver(type,browsertype):
     dump_page_source(driver)
 
     #extract source code for the sub pages
-    recursive_dump_page_source (driver)
+    recursive_dump_page_source (driver,'first')
 
     #capture screen shot
     capture_screenshot(driver)
@@ -622,7 +622,7 @@ def dump_all_data():
     dump_page_source (driver2)
 
     #extract source code for the sub pages
-    recursive_dump_page_source (driver2)
+    recursive_dump_page_source (driver2,'last')
 
     #capture screen shot
     capture_screenshot(driver2)
@@ -668,6 +668,9 @@ def save_hotspot_params(url,file_name):
         hotspot_params["ProtectionMethod"] = dropProtectionMethod.get()
 
         hotspot_params["UsedAccount"] = chkAccount.get()
+        hotspot_params["account_email"] = email_text.get()
+        hotspot_params["ISP"] = ISP_text.get()
+
 
         
         hotspot_params["Critical_Error"] =  params["criticalerror"]
@@ -688,7 +691,7 @@ def save_hotspot_params(url,file_name):
         
         with open(file_name + '.json', 'w') as outfile:
             json.dump(hotspot_params, outfile)
-    except:
+    except Exception as e:
         print ("critical: hotspot parameteres are not saved")
         params["criticalerror"]  = True
 
@@ -733,7 +736,7 @@ def dump_all_final_data():
     save_ssl_file(type)    
 
     #extract source code for the sub pages
-    recursive_dump_page_source (driver2)
+    recursive_dump_page_source (driver2,'last')
    
     #extract source code for the page
     dump_page_source (driver2)
@@ -848,6 +851,7 @@ def Command_Manager():
         chkAccountlist.configure(state="disabled")
         #location.configure(state="disabled")
         text_comments.configure(state="disabled")
+        e4.configure(state="disabled")
         #hide 'save content' button
         b2.grid_remove() 
 
@@ -885,7 +889,7 @@ def Command_Manager():
         try: 
             driver2 = create_driver_session(params["session_id"], params["executor_url"])
             kill_webdriver(driver2)
-        except:
+        except Exception as e:
             print ("")
 
         if validate():
@@ -950,7 +954,7 @@ def validate():
 def kill_webdriver(driver):
     try:
         driver.close() 
-    except:
+    except Exception as e:
         print("")
 
     browserExe = "firefox.exe"
@@ -991,7 +995,7 @@ def capture_screenshot( driver):
         outname = os.path.join(params["output_directory"],'%s.png' %( urlhash))
         driver.save_screenshot(outname)
 
-    except:
+    except Exception as e:
         print ("warning: screen shot is not captured ")
 
 
@@ -1029,7 +1033,7 @@ def dump_DFPM_to_db():
                         insert_query_string = 'INSERT INTO DFPM_javascript (crawl_id, url,method,symbol,host,level,category,function_name,script_url,script_line,script_col) VALUES (?,?, ? , ? , ?,?,?,?,?,?,?)'
                         cur.execute(insert_query_string, (params["crawl_id"],output["url"], output["method"],output["path"],domain,output["level"],output["category"],stack["functionName"],stack["fileName"],stack["lineNumber"],stack["columnNumber"]))
 
-                except:
+                except Exception as e:
                     continue
                     
         cur.execute(" delete from DFPM_javascript"
@@ -1072,7 +1076,7 @@ def dump_page_source(driver):
         with open(outfile, 'wb') as f:
             f.write(driver.page_source.encode('utf8'))
             f.write(b'\n')
-    except:
+    except Exception as e:
         print ("warning: source code is not captured ")
 
 
@@ -1101,9 +1105,10 @@ def dump_firefox_profile_cookies(stage):
             if data == None:
                 query = "INSERT INTO firefox_profile_cookies (crawl_id, visit_id, stage, "\
                          "baseDomain, name, value, host, path, expiry, accessed, "\
-                         "creationTime, isSecure, isHttpOnly) VALUES "\
-                         "(?,?,?,?,?,?,?,?,?,?,?,?,?)"
+                         "creationTime, isSecure, isHttpOnly,InbrowserElement,samesite) VALUES "\
+                         "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
                 cur.execute(query,((params['crawl_id'],params["visit_id"],stage) + row))
+
 
     # Close connection to db
     conn.commit()
@@ -1159,7 +1164,7 @@ def dump_Chrome_profile_cookies(stage):
         conn.close()
 
 
-    except:
+    except Exception as e:
         print ("critical: chrome cookies was not captured ")
         params["criticalerror"] = True
 
@@ -1180,17 +1185,17 @@ def extract_links(webdriver):
 
     if len(link_urls) > 0:
         current_url = webdriver.current_url
-        insert_query_string = 'INSERT INTO links_found (found_on, location) VALUES (?, ?)'
+        insert_query_string = 'INSERT INTO links_found (crawl_id,visit_id,found_on, location) VALUES (?,?,?, ?)'
         for link in link_urls:
             if link != '':
-                cur.execute(insert_query_string, (current_url, link))
+                cur.execute(insert_query_string, (params["crawl_id"],params["visit_id"],current_url, link))
 
 
 
     cur.execute(" delete from links_found"
                    " where rowid not in (select min(rowid)"
                    " from links_found"
-                   " group by found_on,location);")
+                   " group by crawl_id,visit_id,found_on,location);")
          
 
     cnnCrawl.commit()
@@ -1254,7 +1259,7 @@ def dump_js_Session_storage(driver, page_url):
         # Close connection to db
         conn.commit()
         conn.close()
-    except:
+    except Exception as e:
         print ("critical: session storage was not captured ")
         params["criticalerror"] = True
 
@@ -1264,7 +1269,7 @@ def dump_js_Session_storage(driver, page_url):
 # dump_js_local_storage
 #-----------------------------
 
-def dump_js_local_storage(driver, page_url):
+def dump_js_local_storage(driver, page_url,stage):
     try:
         if driver.current_url.lower() == 'about:blank':
             return
@@ -1289,21 +1294,21 @@ def dump_js_local_storage(driver, page_url):
             
             if data == None:
                     
-                 query = "INSERT INTO js_localStorage (crawl_id, visit_id, scope, key, value) "
-                 query =    query +       "VALUES (" + str(params['crawl_id']) + "," + str(params['visit_id']) + ",'" + domain+ "','" +key+ "','" +value+ "')"
+                 query = "INSERT INTO js_localStorage (crawl_id, visit_id, scope, key, value,stage) "
+                 query =    query +       "VALUES (" + str(params['crawl_id']) + "," + str(params['visit_id']) + ",'" + domain+ "','" +key+ "','" +value+ "','" + stage  +"')"
                  cur.execute(query)
 
 
         cur.execute(" delete from js_localStorage"
                        " where rowid not in (select min(rowid)"
                        " from js_localStorage"
-                       " group by visit_id,scope,key);")
+                       " group by visit_id,scope,key,stage);")
              
         # Close connection to db
         conn.commit()
         conn.close()
 
-    except:
+    except Exception as e:
         print ("critical: local storage was not captured ")
         params["criticalerror"] = True
 
@@ -1376,7 +1381,7 @@ def get_cookies(profile_directory):
         with conn:
             c = conn.cursor()
             c.execute('SELECT baseDomain, name, value, host, path, expiry,\
-                lastAccessed, creationTime, isSecure, isHttpOnly \
+                lastAccessed, creationTime, isSecure, isHttpOnly ,InbrowserElement, Samesite\
                 FROM moz_cookies ')
             rows = c.fetchall()
 
@@ -1405,7 +1410,7 @@ def get_chrome_cookies(profile_directory):
 #------------------------------
 # recursive_dump_page_source
 #-----------------------------
-def recursive_dump_page_source(driver):
+def recursive_dump_page_source(driver,stage):
     """https://github.com/citp/OpenWPM
     Dump a compressed html tree for the current page visit"""
   
@@ -1428,7 +1433,7 @@ def recursive_dump_page_source(driver):
             ############this code inserted for Hotspot project
             source = driver.page_source
             dump_js_Session_storage(driver,doc_url)
-            dump_js_local_storage(driver,doc_url)
+            dump_js_local_storage(driver,doc_url,stage)
             dump_js_cookies(driver,doc_url)
             ########################
 
@@ -1452,7 +1457,7 @@ def recursive_dump_page_source(driver):
         with gzip.GzipFile(outfile, 'wb') as f:
             f.write(json.dumps(page_source).encode('utf-8'))
 
-    except:
+    except Exception as e:
         print ("critical: recursive_dump_page_source is not captured")
         params["criticalerror"]  = True
 
@@ -1522,7 +1527,7 @@ def execute_in_all_frames(driver, func, kwargs={}, frame_stack=['default'],
         frame_stack.append(frame)
         try:
             driver.switch_to_frame(frame)
-        except:
+        except Exception as e:
             if logger is not None:
                 logger.error("Error while switching to frame %s (visit: %d))" %
                              (str(frame), visit_id))
@@ -1618,7 +1623,7 @@ def add_policy():
         driver =webdriver.Firefox(firefox_binary=binary,executable_path=executable_path)
         try:
             driver.maximize_window() #maximize the
-        except:
+        except Exception as e:
             print("")
 
         try:
@@ -1654,7 +1659,7 @@ def add_policy():
             #save agreement
             save_agreement(driver)
 
-        except:
+        except Exception as e:
             label1.configure(text="Incomplete Dataset")
             label4.configure(text="Agreement was not captured, please manually upload it's HTML code as agreement.html  to output folder.\nTo read the agreement, you can click the below button to try to open the captive portal welcome page. " )
             btn_welcome_page.grid(row=32, column=1)
@@ -1666,6 +1671,7 @@ def add_policy():
 # Create UI
 #-----------------------------------
 
+#todo check if the any localstorage written before user contest
 window = Tk()
 Large_font  = ("Vernada",12)
 window.title("Collect Hotspot Data")
@@ -1708,11 +1714,15 @@ l1.grid(sticky = W,row=5,column=0, padx=5, pady=5)
 l1 = ttk.Label(window, text="Used Account:" , style="BW.TLabel",width=15, justify=LEFT)
 l1.grid(sticky = W,row=6,column=0, padx=5, pady=5)
 
+l1 = ttk.Label(window, text="Service Provider:" , style="BW.TLabel",width=15, justify=LEFT)
+l1.grid(sticky = W,row=7,column=0, padx=5, pady=5)
+
+
 l1 = ttk.Label(window, text="Have you authorize the service to track your location?" , style="BW.TLabel",width=42, justify=LEFT)
-l1.grid(sticky = W,row=7,column=0, padx=5, pady=5, columnspan=2)
+l1.grid(sticky = W,row=8,column=0, padx=5, pady=5, columnspan=2)
 
 l1 = ttk.Label(window, text="Comments:" , style="BW.TLabel",width=15, justify=LEFT)
-l1.grid(sticky = NW,row=8,column=0, padx=5, pady=5,columnspan=1)
+l1.grid(sticky = NW,row=9,column=0, padx=5, pady=5,columnspan=1)
 
 
 
@@ -1739,7 +1749,8 @@ list1.grid(sticky = W,row=4,column=1)
 
 
 #draw drop down
-OPTIONS = ["None",  "Ghostery","AdBlock Plus","Privacy Badger","Incognito"]
+OPTIONS = ["None",  "AdBlock Plus","Privacy Badger","Incognito"]
+#OPTIONS = ["None",  "Ghostery","AdBlock Plus","Privacy Badger","Incognito"]
 dropProtectionMethod = StringVar(window)
 dropProtectionMethod.set(OPTIONS[0]) # default value
 ProtectionMethodList= OptionMenu(window, dropProtectionMethod, *OPTIONS)
@@ -1766,12 +1777,18 @@ def change_dropdown(*args):
 chkAccount.trace('w', change_dropdown)
 
 
+#draw Internet Service Provider field
+ISP_text = StringVar()
+e4=Entry(window,textvariable=ISP_text,width=40)
+e4.grid(sticky = W,row=7,column=1)
+
+
 #draw location options
 location = IntVar()
 
-Radiobutton(window, text="Yes", variable=location, value=1).grid(row = 7,column=2, padx = 10, pady = 2, sticky=W)
+Radiobutton(window, text="Yes", variable=location, value=1).grid(row = 8,column=2, padx = 10, pady = 2, sticky=W)
 
-Radiobutton(window, text="No", variable=location, value=2).grid(row = 7,column=3, padx = 10, pady = 2, sticky=W)
+Radiobutton(window, text="No", variable=location, value=2).grid(row = 8,column=3, padx = 10, pady = 2, sticky=W)
 #location.grid(sticky = E,row=7,column=1)
 
 
@@ -1798,7 +1815,7 @@ text_comments.tag_bind('bite',
               lambda e, t=text_comments: t.insert(END, "Text"))
 
 #text.pack(side=LEFT)
-text_comments.grid(sticky = W,row=8,column=1)
+text_comments.grid(sticky = W,row=9,column=1)
 #scroll.pack(side=RIGHT, fill=Y)
 
 
