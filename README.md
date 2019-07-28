@@ -1,7 +1,7 @@
 # Installation
-Hotspots are physical locations where people can gain internet access through a Wi-Fi connection.
+Hotspots are physical locations where people can gain free internet access through a Wi-Fi connection.
 
-Currently, Hotspot application has primarily been written and tested on windows 7 and windows 10 machines. 
+Currently, CPInspector application has primarily been written and tested on windows 7/8/10 Window machines. 
 
 
 
