@@ -51,12 +51,19 @@ Install the following programs on your machine:
 Programs and other executable files can be in many directories, so operating systems provide a search path that lists the directories that the OS searches for executables. Make sure to add the following directories to PATH Environment Variable in Windows (if not added before):
 
 C:\Program Files\nodejs
+
 C:\Program Files\Wireshark
+
 C:\Program Files\python37
+
 C:\Program Files\python37\Scripts
+
 C:\Program Files\python37\Lib\site-packages
+
 C:\users\[user Name]\AppData\Local\Programs\Python\Python37\Scripts
+
 C:\users\[user Name]\AppData\Local\Programs\Python\Python37
+
 C:\users\[user Name]\AppData\Roaming\npm
  
 For the latest three variables, please replace [user name] with your windows user name.
