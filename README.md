@@ -69,7 +69,7 @@ C:\users\[user Name]\AppData\Roaming\npm
 For the latest three variables, please replace [user name] with your windows user name.
 
 
-### Step4: Installing Dependencies 
+#### Step4: Installing Dependencies 
 
 Open a Command Prompt, then run the following command:
  
