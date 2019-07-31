@@ -12,7 +12,7 @@ export function logger(self, emitter){
             fonts.add(font)
             var level;
             if(fonts.size < 5) return
-            else if(fonts.size < 10) level = 'warning'
+            else if(fonts.size < 30) level = 'warning'
             else level = 'danger'
             emitter.emit('event', {
                 method: 'get',

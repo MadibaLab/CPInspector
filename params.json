@@ -1,2 +1,2 @@
 {
-"crawl_id": "1", "rootPath":  "C:\\Hotspot\\", "SSLKeyLogPath":  "C:\\Hotspot\\" ,   "database_name": "crawl-data.sqlite","Extract_links": "True","Add_Policy": "True", "wireless_adapter":"Wireless"}
+"crawl_id": "1", "rootPath":  "C:\\Hotspot\\", "SSLKeyLogPath":  "C:\\Hotspot\\" ,   "database_name": "crawl-data.sqlite","Extract_links": "True","Add_Policy": "False", "wireless_adapter":"HS-Wi-Fi", "DisableSelectBrowser":"1","DisableProtectionMethodList":"1", "firefox_load":"http://detectportal.firefox.com//success.txt","chrome_load":"http://gstatic.com//generate_204"}

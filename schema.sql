@@ -10,13 +10,14 @@ CREATE TABLE IF NOT EXISTS crawl (
     crawl_id INTEGER PRIMARY KEY AUTOINCREMENT,
     upload_crawl_id integer,
     finished BOOLEAN NOT NULL DEFAULT 0,
-    start_time DATETIME DEFAULT CURRENT_TIMESTAMP);
+    start_time DATETIME DEFAULT  (datetime('now', 'localtime')));
 
 CREATE TABLE IF NOT EXISTS site_visits (
     visit_id INTEGER PRIMARY KEY,
     crawl_id INTEGER NOT NULL,
     site_url VARCHAR(500) NOT NULL,
     hash_url VARCHAR(500) NOT NULL,
+    create_time DATETIME DEFAULT  (datetime('now', 'localtime')),
     FOREIGN KEY(crawl_id) REFERENCES crawl(id));
 
 /* Firefox Storage Vector Dumps */
@@ -47,7 +48,7 @@ CREATE TABLE IF NOT EXISTS firefox_profile_cookies (
     creationTime INTEGER,
     isSecure INTEGER,
     InbrowserElement Integer,
-    samesite integer,
+    samesite text,
     isHttpOnly INTEGER, stage text);
 
 CREATE TABLE IF NOT EXISTS chrome_profile_cookies (
@@ -101,6 +102,7 @@ CREATE TABLE IF NOT EXISTS js_localStorage (
     scope TEXT,
     KEY TEXT,
     value TEXT, stage text,
+    create_time DATETIME DEFAULT  (datetime('now', 'localtime')),
     FOREIGN KEY(crawl_id) REFERENCES crawl(id));
 
 
@@ -111,6 +113,7 @@ CREATE TABLE IF NOT EXISTS profile_localStorage (
     KEY TEXT,
     value TEXT,
     stage text,
+    create_time DATETIME DEFAULT  (datetime('now', 'localtime')),
     FOREIGN KEY(crawl_id) REFERENCES crawl(id));
 
 CREATE TABLE IF NOT EXISTS js_sessionStorage (
@@ -120,6 +123,7 @@ CREATE TABLE IF NOT EXISTS js_sessionStorage (
     scope TEXT,
     KEY TEXT,
     value TEXT,
+    create_time DATETIME DEFAULT  (datetime('now', 'localtime')),
     FOREIGN KEY(crawl_id) REFERENCES crawl(id));
 
 
@@ -163,4 +167,11 @@ CREATE TABLE IF NOT EXISTS links_found (
     crawl_id INTEGER ,
     visit_id INTEGER ,
     found_on TEXT,
-    location TEXT);
+    location TEXT,
+   type text, hash_url text    );
+
+CREATE TABLE IF NOT EXISTS device_config (
+    crawl_id INTEGER ,
+    visit_id INTEGER ,
+    key TEXT,
+    value TEXT   );

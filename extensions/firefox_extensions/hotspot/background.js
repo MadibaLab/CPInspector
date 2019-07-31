@@ -1,15 +1,26 @@
-
+var cookie= []
 
 browser.cookies.onChanged.addListener(function(info) {
-	var cookie= {}
  	if (info["cause"] ==="explicit" ){
 		if  (info["removed"] ===false ){
-			cookie[info.cookie.name] = JSON.stringify(info.cookie)
-  			console.log(info["cause"] + " -- " + JSON.stringify(info.cookie));
+			var set_cookie= {}
+			let loadTime = new Date().getTime() / 1000;
+			
+			
+			var cart= JSON.parse(JSON.stringify(info.cookie))
+			cart.createdate = loadTime
 
-			browser.storage.local.set(cookie);
+			
+			//console.log(cart);
+			cookie.push(JSON.stringify(cart));
+			
+				
+			set_cookie["set_cookie"] = cookie;
+			//console.log(set_cookie);
+			browser.storage.local.set(set_cookie);
 		}
 	}
  
 
 });
+

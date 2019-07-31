@@ -32,8 +32,10 @@ from selenium.webdriver.firefox.firefox_profile import (
     FirefoxProfile as BaseFirefoxProfile,
     AddonFormatError
 )
-
-
+import requests
+import getpass
+from glob import glob
+from PIL import Image
 import webbrowser
 
 import codecs
@@ -55,12 +57,13 @@ import tarfile
 import errno
 import win32crypt #https://sourceforge.net/projects/pywin32/
 
-
 __all__ = ['FirefoxProfile']
 
+user = os.getenv('USER') or os.getenv('LOGNAME') or  os.getenv('USERNAME')
+
+#print (user)
 
 DEBUG = True
-FLASH_DIRS = [ r"C:\\Documents and Settings\\%s\\Application Data\\Macromedia\\Flash Player\\#SharedObjects\\" %( os.getlogin()) ]
 import pickle
 from subprocess import call
 ##from Naked.toolshed.shell import muterun_js
@@ -71,7 +74,10 @@ from selenium.webdriver.firefox.firefox_profile import AddonFormatError
 
 # Add class
 
-#https://github.com/citp/OpenWPM
+#------------------------------
+# FirefoxProfile1
+#-----------------------------
+#source: https://github.com/citp/OpenWPM
 class FirefoxProfile1(BaseFirefoxProfile):
     """Hook class for patching bugs in Selenium's FirefoxProfile class"""
     def __init__(self, *args, **kwargs):
@@ -183,11 +189,18 @@ def AddEnvironementVariables():
     debussy = int(os.environ.get('DEBUSSY', '-1'))
 
 #------------------------------
-# deletesslkeylog
+# deletetrafficfiles
 #-----------------------------                   
-def deletesslkeylog():
+def deletetrafficfiles():
     #delete sslkeylog
     myfile= params["SSLKeyLogPath"] +"\\sslkeylog.log"
+
+    ## If file exists, delete it ##
+    if os.path.isfile(myfile):
+        os.remove(myfile)
+
+    #delete traffic
+    myfile= params["SSLKeyLogPath"] +"\\traffic.pcap"
 
     ## If file exists, delete it ##
     if os.path.isfile(myfile):
@@ -229,10 +242,12 @@ def create_driver_session(session_id, executor_url):
 # GetProfilePath
 #-----------------------------
 # description:
-# this is a workaround for stange behavior of selenium
+# this is a workaround for strange behavior of selenium
 # extract firefox tem profile folder from log file
 #-----------------------------
 def GetProfilePath(file_path):
+
+    
     #open the log file
     with open(file_path, encoding="utf8") as f:
         for line in f:
@@ -243,9 +258,9 @@ def GetProfilePath(file_path):
 
                     profile_name = tmpprofile_path[1:-1]
 
-    #copse the temp folder path and return it
-    profile_path = r"C:\Users\%s\AppData\Local\Temp\rust_mozprofile.%s" %( os.getlogin() ,profile_name)
-                  
+    #copy the temp folder path and return it
+    profile_path = r"C:\Users\%s\AppData\Local\Temp\rust_mozprofile.%s" %( user ,profile_name)
+    
     return profile_path
 
 
@@ -262,6 +277,13 @@ def killprocess():
     os.system("taskkill /f /im "+browserExe)
 
     browserExe = "firefox.exe"
+    os.system("taskkill /f /im "+browserExe)
+
+    #todo check the case of jewish hospital
+    browserExe = "iexplore.exe"
+    os.system("taskkill /f /im "+browserExe)
+
+    browserExe = "MicrosoftEdge.exe"
     os.system("taskkill /f /im "+browserExe)
     
     browserExe = "chrome.exe" 
@@ -293,6 +315,7 @@ def getProfilePath( type,browsertype):
         original_profile_path =  os.path.join(params["root_dir"] , "profiles","adblockplus_" + profile_name)
     elif type =='Privacy Badger': #Privacy Badger 2018.8.22
         original_profile_path =  os.path.join(params["root_dir"] , "profiles","privacybadger_" + profile_name)
+        #original_profile_path = os.path.join(params["root_dir"], "profiles", profile_name)
     elif type =='Incognito': #Incognito
         original_profile_path =  os.path.join(params["root_dir"] , "profiles","Incognito_" + profile_name)
 
@@ -300,16 +323,16 @@ def getProfilePath( type,browsertype):
     #This is applied only for chrome    
     if browsertype != "Firefox":
         if type =='None':
-            temp_FP_Path = "C:/Users/%s/AppData/Local/Temp/%s%s" %( os.getlogin() ,profile_name,datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S'))
+            temp_FP_Path = "C:/Users/%s/AppData/Local/Temp/%s%s" %( user ,profile_name,datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S'))
         elif type =='Ghostery': #ghostery
-            temp_FP_Path = "C:/Users/%s/AppData/Local/Temp/%s%s" %( os.getlogin() ,"ghostery_" + profile_name,datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S'))
+            temp_FP_Path = "C:/Users/%s/AppData/Local/Temp/%s%s" %( user ,"ghostery_" + profile_name,datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S'))
         elif type =='AdBlock Plus': #Adblockplus 3.2
-            temp_FP_Path = "C:/Users/%s/AppData/Local/Temp/%s%s" %( os.getlogin() ,"adblockplus_" + profile_name,datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S'))
+            temp_FP_Path = "C:/Users/%s/AppData/Local/Temp/%s%s" %( user ,"adblockplus_" + profile_name,datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S'))
         elif type =='Privacy Badger': #Privacy Badger 2018.8.22
-            temp_FP_Path = "C:/Users/%s/AppData/Local/Temp/%s%s" %( os.getlogin() ,"privacybadger_" + profile_name,datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S'))
+            temp_FP_Path = "C:/Users/%s/AppData/Local/Temp/%s%s" %( user ,"privacybadger_" + profile_name,datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S'))
 
         elif type =='Incognito':
-            temp_FP_Path = "C:/Users/%s/AppData/Local/Temp/%s%s" %( os.getlogin() ,"Incognito_" + profile_name,datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S'))
+            temp_FP_Path = "C:/Users/%s/AppData/Local/Temp/%s%s" %( user ,"Incognito_" + profile_name,datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S'))
         params["browser_profile_path"] = temp_FP_Path 
         shutil.copytree(original_profile_path,params["browser_profile_path"]   ,ignore=shutil.ignore_patterns("parent.lock", "lock", ".parentlock"))
 
@@ -320,131 +343,133 @@ def getProfilePath( type,browsertype):
 # initiateWebDriver
 #-----------------------------
 def initiateWebDriver(type,browsertype):
+    
+    #try: #todo return
 
-
-    if browsertype =="Firefox":
-        #get profile path
-        FP = getProfilePath(type,browsertype)
-        profile= FirefoxProfile1(FP)
-        #define binary location path
-        binary = FirefoxBinary(params["root_dir"] + r'\browsers\Mozilla Firefox\firefox.exe')
-        #set profile preferences
-        profile.set_preference("network.http.spdy.enabled.http2", False)
-        profile.set_preference("xpinstall.signatures.required", False)
-        profile.set_preference("xpinstall.whitelist.required", False)
-        profile.set_preference("devtools.netmonitor.persistlog", True)
-        if type =='Incognito':
-            options = Options()
-            profile.set_preference("browser.privatebrowsing.autostart", True)
-            profile.set_preference("privacy.trackingprotection.enabled",True)
-            options.add_argument('-private')
+        if browsertype =="Firefox":
+            #get profile path
+            FP = getProfilePath(type,browsertype)
+            #print (FP)
+            profile= FirefoxProfile1(FP)
+            #define binary location path
+            binary = FirefoxBinary(params["root_dir"] + r'\browsers\Mozilla Firefox\firefox.exe')
+            #set profile preferences
+            profile.set_preference("network.http.spdy.enabled.http2", False)
+            profile.set_preference("xpinstall.signatures.required", False)
+            profile.set_preference("xpinstall.whitelist.required", False)
+            profile.set_preference("devtools.netmonitor.persistlog", True)
+            if type =='Incognito':
+                options = Options()
+                profile.set_preference("browser.privatebrowsing.autostart", True)
+                profile.set_preference("privacy.trackingprotection.enabled",True)
+                options.add_argument('-private')
+                
+            #add hotspot extension    
+            ext_loc = params["root_dir"] + r'\extensions\firefox_extensions\hotspot\hotspot.xpi' 
+            ext_loc = os.path.normpath(ext_loc)
+            profile.add_extension(extension=ext_loc) 
             
-        #add hotspot extension    
-        ext_loc = params["root_dir"] + r'\extensions\firefox_extensions\hotspot\hotspot.xpi' 
-        ext_loc = os.path.normpath(ext_loc)
-        profile.add_extension(extension=ext_loc) 
-        
 
-        profile.update_preferences()
-        #put driver path in environment variables
-        os.environ["PATH"] += os.pathsep +  params["root_dir"] + "\drivers\geckodriver.exe"
-        executable_path = params["root_dir"] + "\drivers\geckodriver.exe"
-        if type =='Incognito':
-            driver =webdriver.Firefox(firefox_binary=binary,firefox_profile=profile,firefox_options=options,  executable_path=executable_path)
+            profile.update_preferences()
+            #put driver path in environment variables
+            os.environ["PATH"] += os.pathsep +  params["root_dir"] + "\drivers\geckodriver.exe"
+            executable_path = params["root_dir"] + "\drivers\geckodriver.exe"
+            if type =='Incognito':
+                driver =webdriver.Firefox(firefox_binary=binary,firefox_profile=profile,firefox_options=options,  executable_path=executable_path)
+            else:
+                driver =webdriver.Firefox(firefox_binary=binary,firefox_profile=profile,  executable_path=executable_path)
+
+            #store log file in parameters, form this file we extract temp profile name
+            params["driverlogpath"] =  params["output_directory"]   + "\geckodriver.log"
+
+            #read firefox profile path
+            params["browser_profile_path"] = GetProfilePath(params["driverlogpath"] )
+
+            #print (params["browser_profile_path"])
         else:
-            driver =webdriver.Firefox(firefox_binary=binary,firefox_profile=profile,  executable_path=executable_path)
+            
+            #get profile path
+            FP = getProfilePath(type,browsertype)
 
-        #store log file in parameters, form this file we extract temp profile name
-        params["driverlogpath"] =  params["output_directory"]   + "\geckodriver.log"
+            #set profile preferences
+            options = webdriver.ChromeOptions()
+            options.add_argument("user-data-dir=" + params["browser_profile_path"] ) #Path to your chrome profile
+            options.add_argument("--disable-http2") 
+            options.add_argument("start-maximized")
+            options.add_argument("--remote-debugging-port=9222") #source:http://www.assertselenium.com/java/list-of-chrome-driver-command-line-arguments/
+            #add extensions 
+            if type =='Ghostery':
+               options.add_extension(params["root_dir"] + "/extensions/chrome_extensions/Ghostery_v8.2.3.crx")
+            elif type=="Privacy Badger":
+                 options.add_extension(params["root_dir"] + "/extensions/chrome_extensions/Privacy-Badger_v2018.8.22.crx")
+            elif type=="AdBlock Plus":
+                 options.add_extension(params["root_dir"] + "/extensions/chrome_extensions/Adblock-Plus_v3.2.crx")
+            elif type=="Incognito":
+                options.add_argument("--incognito")
+            options.add_extension(params["root_dir"] + "/extensions/chrome_extensions/DFPM_v1.15.crx")
+            options.add_extension(params["root_dir"] + "/extensions/chrome_extensions/hotspot.crx")
+            #define binary location path
+            options.binary_location = params["root_dir"] + r'\browsers\Chrome\Application\Chrome.exe'
+            #put driver path in environment variables
+            executable_path = os.path.join(params["root_dir"] , "drivers","chromedriver.exe")
+            os.environ["PATH"] += executable_path
 
-        #read firefox profile path
-        params["browser_profile_path"] = GetProfilePath(params["driverlogpath"] )
-    else:
-        
-        #get profile path
-        FP = getProfilePath(type,browsertype)
+            driver = webdriver.Chrome(executable_path=executable_path, chrome_options=options)#,desired_capabilities=desired)
+           
+        #save session variables
+        params["executor_url"] = driver.command_executor._url
+        params["session_id"] = driver.session_id
 
-        #set profile preferences
-        options = webdriver.ChromeOptions()
-        desired = DesiredCapabilities.CHROME
-#        perfLogPrefs = ChromePerformanceLoggingPreferences
-##        perfLogPrefs.AddTracingCategories( { "devtools.network" })
-##        options.PerformanceLoggingPreferences = perfLogPrefs
-##        options.AddAdditionalCapability(CapabilityType.EnableProfiling, true, true)
-##        options.SetLoggingPreference("performance", LogLevel.All)
-        desired['loggingPrefs'] = {'browser':'ALL','performance':'ALL', 'network':'ALL' }
+        #Open browser on url to detect captive portal
+        if browsertype =="Firefox":
+            driver.get(params["firefox_load"])
+            #this code will work only on firefox
+            try:
+                driver.manage().window().maximize() #maximize the window
+            except Exception as e:
+                print("")
+        else:
+    ##        #driver.get("https://mcd-e.datavalet.io/E4358CA832CB4C96A2BCB1C546DF64B7/FC0BEDA4DB49483BADEA173EBE1E0FD0/bG9naW5fdXJsPWh0dHBzJTNBJTJGJTJGbjgxLm5ldHdvcmstYXV0aC5jb20lMkZzcGxhc2glMkZsb2dpbiUzRm1hdXRoJTNETU11Vmt2R0JacGNFY1dDV1hkTzVxZXBGWGNkSDVaOS1JYzhGc2xEZDAwU04tamlSSjlkeHR1OERMd1lhRnQwT1hJQWRmOTFfYzhaallQa3lmYUY5RHg2b0dZUkVhWUh5a1FBeVROS2I1R0x1bW5jdk5RRExNdmlBS0lOa3psNUdWV2x2SktMdzJDbW1yZmRDUFliYm1ac29PZTBGaFIwWlJNLUkzSk9PcEFmek1Ud09ZQWlpaDBLMUx6RXg0aFFBSUk0cWkyZzdKVUhIQSUyNmNvbnRpbnVlX3VybCUzRGh0dHAlMjUzQSUyNTJGJTI1MkZ3d3cubWNkb25hbGRzLmNhJTI1MkYmY29udGludWVfdXJsPWh0dHAlM0ElMkYlMkZ3d3cubWNkb25hbGRzLmNhJTJGJmFwX21hYz04OCUzQTE1JTNBNDQlM0FhYSUzQTkxJTNBMDUmYXBfbmFtZT1NQ0QtUUMtTEFTLTAyMzc5LVdBUDEmYXBfdGFncz0mY2xpZW50X21hYz0wMiUzQWUwJTNBZTMlM0FmMiUzQTUyJTNBYWYmY2xpZW50X2lwPTE5Mi4xNjguMjU1LjE3NA==/fr/welcome.html")
+            driver.get(params["chrome_load"])
+            #driver.get("https://walmart.ca")
 
-        options.add_argument("user-data-dir=" + params["browser_profile_path"] ) #Path to your chrome profile
-        options.add_argument("--disable-http2") 
-        options.add_argument("start-maximized")
-        #options.add_argument("--disable-gpu")
-        options.add_argument("--remote-debugging-port=9222") #http://www.assertselenium.com/java/list-of-chrome-driver-command-line-arguments/
-        #add extensions 
-        if type =='Ghostery':
-           options.add_extension(params["root_dir"] + "/extensions/chrome_extensions/Ghostery_v8.2.3.crx")
-        elif type=="Privacy Badger":
-             options.add_extension(params["root_dir"] + "/extensions/chrome_extensions/Privacy-Badger_v2018.8.22.crx")
-        elif type=="AdBlock Plus":
-             options.add_extension(params["root_dir"] + "/extensions/chrome_extensions/Adblock-Plus_v3.2.crx")
-        elif type=="Incognito":
-            options.add_argument("--incognito")
-        options.add_extension(params["root_dir"] + "/extensions/chrome_extensions/DFPM_v1.15.crx")
-        options.add_extension(params["root_dir"] + "/extensions/chrome_extensions/hotspot.crx")
-        #define binary location path
-        options.binary_location = params["root_dir"] + r'\browsers\Chrome\Application\Chrome.exe'
-        #put driver path in environment variables
-        executable_path = os.path.join(params["root_dir"] , "drivers","chromedriver.exe")
-        os.environ["PATH"] += executable_path
-        driver = webdriver.Chrome(executable_path=executable_path, chrome_options=options,desired_capabilities=desired)
+        time.sleep( 20 )
+        #save first page open in the browser as Captive portal welcome page
+        params["WelcomePageURL"] = driver.current_url
 
-       
-    #save session variables
-    params["executor_url"] = driver.command_executor._url
-    params["session_id"] = driver.session_id
+       #add record to sitevisit table
+        add_new_page(driver)
+
+        #check if any cookies are written before user approval
+        dump_profile_cookies('first')
+
+        #extract source code for the page
+        dump_page_source(driver)
+
+        #extract source code for the sub pages
+        recursive_dump_page_source (driver,'first')
+
+       # dump local storage
+        dump_profile_LocalStorage(driver,'first')
+
+        #capture screen shot
+        capture_screenshot(driver)
+
+        #extract all links to url, js, and iframe from page
+        extract_js(driver)
+        extract_iframe(driver)
+        extract_links(driver)
 
 
-    #Open browser on url to detect captive portal
-    #driver.get("https://mcd-e.datavalet.io/E4358CA832CB4C96A2BCB1C546DF64B7/FC0BEDA4DB49483BADEA173EBE1E0FD0/bG9naW5fdXJsPWh0dHBzJTNBJTJGJTJGbjgxLm5ldHdvcmstYXV0aC5jb20lMkZzcGxhc2glMkZsb2dpbiUzRm1hdXRoJTNETU11Vmt2R0JacGNFY1dDV1hkTzVxZXBGWGNkSDVaOS1JYzhGc2xEZDAwU04tamlSSjlkeHR1OERMd1lhRnQwT1hJQWRmOTFfYzhaallQa3lmYUY5RHg2b0dZUkVhWUh5a1FBeVROS2I1R0x1bW5jdk5RRExNdmlBS0lOa3psNUdWV2x2SktMdzJDbW1yZmRDUFliYm1ac29PZTBGaFIwWlJNLUkzSk9PcEFmek1Ud09ZQWlpaDBLMUx6RXg0aFFBSUk0cWkyZzdKVUhIQSUyNmNvbnRpbnVlX3VybCUzRGh0dHAlMjUzQSUyNTJGJTI1MkZ3d3cubWNkb25hbGRzLmNhJTI1MkYmY29udGludWVfdXJsPWh0dHAlM0ElMkYlMkZ3d3cubWNkb25hbGRzLmNhJTJGJmFwX21hYz04OCUzQTE1JTNBNDQlM0FhYSUzQTkxJTNBMDUmYXBfbmFtZT1NQ0QtUUMtTEFTLTAyMzc5LVdBUDEmYXBfdGFncz0mY2xpZW50X21hYz0wMiUzQWUwJTNBZTMlM0FmMiUzQTUyJTNBYWYmY2xpZW50X2lwPTE5Mi4xNjguMjU1LjE3NA==/fr/welcome.html")
-    if browsertype =="Firefox":
-        driver.get("http://detectportal.firefox.com/success.txt")
-        #driver.get("https://walmart.ca")
-        #this code will work only on firefox
-        try:
-            driver.manage().window().maximize() #maximize the window
-            #todo this is does not work on windows10
-        except Exception as e:
-            print("")
-    else:
-##        #driver.get("https://mcd-e.datavalet.io/E4358CA832CB4C96A2BCB1C546DF64B7/FC0BEDA4DB49483BADEA173EBE1E0FD0/bG9naW5fdXJsPWh0dHBzJTNBJTJGJTJGbjgxLm5ldHdvcmstYXV0aC5jb20lMkZzcGxhc2glMkZsb2dpbiUzRm1hdXRoJTNETU11Vmt2R0JacGNFY1dDV1hkTzVxZXBGWGNkSDVaOS1JYzhGc2xEZDAwU04tamlSSjlkeHR1OERMd1lhRnQwT1hJQWRmOTFfYzhaallQa3lmYUY5RHg2b0dZUkVhWUh5a1FBeVROS2I1R0x1bW5jdk5RRExNdmlBS0lOa3psNUdWV2x2SktMdzJDbW1yZmRDUFliYm1ac29PZTBGaFIwWlJNLUkzSk9PcEFmek1Ud09ZQWlpaDBLMUx6RXg0aFFBSUk0cWkyZzdKVUhIQSUyNmNvbnRpbnVlX3VybCUzRGh0dHAlMjUzQSUyNTJGJTI1MkZ3d3cubWNkb25hbGRzLmNhJTI1MkYmY29udGludWVfdXJsPWh0dHAlM0ElMkYlMkZ3d3cubWNkb25hbGRzLmNhJTJGJmFwX21hYz04OCUzQTE1JTNBNDQlM0FhYSUzQTkxJTNBMDUmYXBfbmFtZT1NQ0QtUUMtTEFTLTAyMzc5LVdBUDEmYXBfdGFncz0mY2xpZW50X21hYz0wMiUzQWUwJTNBZTMlM0FmMiUzQTUyJTNBYWYmY2xpZW50X2lwPTE5Mi4xNjguMjU1LjE3NA==/fr/welcome.html")
-        driver.get("http://gstatic.com/generate_204")
-        #driver.get("http://www.msftncsi.com/ncsi.txt")
-        #todo check if this works http://www.msftncsi.com/ncsi.txt
-       # driver.get("https://walmart.ca")
+#    except Exception as e:
+##        print(e)
+##        print ('step: error while open browser, make sure to copy firefox/chrome browsers into c:\hotspot\browser')
+##        params["criticalerror"] = True
+##        print(e)
 
-    #save first page open in the browser as Captive portal welcome page
-    params["WelcomePageURL"] = driver.current_url
+
+  
  
-  
-    #add record to sitevisit table
-    add_new_page(driver)
-
-
-    #check if any cookies are written before user approval
-    dump_profile_cookies('first')
-
-    #extract source code for the page
-    dump_page_source(driver)
-
-    #extract source code for the sub pages
-    recursive_dump_page_source (driver,'first')
-
-    #capture screen shot
-    capture_screenshot(driver)
-
-  
-    #extract all links from page
-    extract_links(driver)
-
     
 
     
@@ -457,16 +482,21 @@ def Create_outputfolders():
     os.chdir('c:\\')
     if not os.path.exists(directory):
       os.makedirs(directory)
-    # create current crawl main output directory
+    # create current crawl main directory
     os.chdir('c:\\crawl_output')
 
  
     # create current  output directory for test case
 
+    #remove special char
+    name = name_text.get()
+    #for k in name.split("\n"):
+    name = re.sub(r"[^a-zA-Z0-9]+", ' ', name)
+    
     if params["browsertype"] =="Firefox":
-        directory = os.path.join(os.getcwd(),  name_text.get() + "_FF_result" +  datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S'))
+        directory = os.path.join(os.getcwd(),  name + "_FF_result" +  datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S'))
     else:    
-        directory = os.path.join(os.getcwd(),  name_text.get() + "_C_result" +  datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S'))
+        directory = os.path.join(os.getcwd(),  name + "_C_result" +  datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S'))
 
     if not os.path.exists(directory):
       os.makedirs(directory)
@@ -501,21 +531,25 @@ def find_Wireless_Interface():
     ethernet = "-1" #for VM
     wifi     = "-1" #for Windows 10
     args  = ["tshark", "-D"]
-    p = subprocess.Popen(args , stdout=subprocess.PIPE, shell=True) ## Talk with date command i.e. read data from stdout and stderr. Store this info in tuple ##
+    p = subprocess.Popen(args , stdout=subprocess.PIPE) ## Talk with date command i.e. read data from stdout and stderr. Store this info in tuple ##
     (output, err) = p.communicate() ## Wait for date to terminate. Get return returncode ##
     p_status = p.wait()
     idx = 1
+    wireless_adapter = params["wireless_adapter"]
+    if output != None:
+        output = output.lower()
+
     for item in output.decode().split('\r\n'):
         item = item.strip()
         if not item:
             continue
-        if params["wireless_adapter"] in item:
+        if wireless_adapter.lower() in item:
             interface = str(idx)
             
-        if 'Wi-Fi' in item:
+        if 'wi-fi' in item:
             wifi = str(idx)
             
-        if 'Ethernet' in item:
+        if 'ethernet' in item:
             ethernet = str(idx)
         idx = idx + 1    
 
@@ -528,11 +562,10 @@ def find_Wireless_Interface():
         else:
             raise IOError('No Installed wireless or Ethernet Interface for capturing traffic')
 
-            
+        
     return interface
 
 
- 
 
 #------------------------------
 # initiateWireshark
@@ -540,11 +573,12 @@ def find_Wireless_Interface():
 def initiateWireshark():
     #find Wireless Interfase
     interface = params["interface"]
-    os.chdir(params["output_directory"])
+    os.chdir(params["SSLKeyLogPath"])
     args  = ["tshark", "-i", interface, "-w", "traffic.pcap"]
     tsharkProc = subprocess.Popen(args , bufsize=0, executable="C:\\Program Files\\Wireshark\\tshark.exe")
     #tsharkProc = subprocess.Popen(tsharkCall, bufsize=0, executable="C:\\Program Files\\Wireshark\\dumpcap.exe")
     params["tsharkProc"] = tsharkProc
+    os.chdir(params["output_directory"])
 
     
 
@@ -567,7 +601,7 @@ def validateGUI():
 
     if params["step"] == "Finish":
         if location.get() == 0:
-           error_message = "'Have you authorize the service to track your location?' is required."
+           error_message = "'Have you authorized the service to track your location?' is required."
 
     return error_message
        
@@ -578,11 +612,18 @@ def validateGUI():
 # add_new_page
 #-----------------------------
 def add_new_page(driver):
-
+    try:
         params["visit_id"] = params["visit_id"] + 1
         current_url = driver.current_url + str(params["visit_id"])
+        current_url = urllib.parse.unquote(current_url)
+        
         urlhash = md5(current_url.encode('utf-8')).hexdigest()
-        current_url = driver.current_url 
+        current_url = driver.current_url
+        if current_url.endswith("#/"):
+            current_url = current_url[len(current_url)-2:]
+
+        if current_url.endswith("#_=_"):
+            current_url = current_url[len(current_url)-4:]
 
         conn = sqlite3.connect(os.path.join(params["output_directory"],params["database_name"]))
         cur = conn.cursor()
@@ -600,10 +641,14 @@ def add_new_page(driver):
             insert_query_string = 'INSERT INTO site_visits (visit_id, crawl_id,site_url,hash_url) VALUES (?, ?,?,?)'
             cur.execute(insert_query_string,  (params["visit_id"],params["crawl_id"], current_url,urlhash))
 
+            insert_query_string = 'INSERT INTO links_found (crawl_id,visit_id,found_on, location,type) VALUES (?,?,?, ?,?)'
+            cur.execute(insert_query_string, (params["crawl_id"],params["visit_id"],current_url,current_url,'html'))
+
 
         conn.commit()
         conn.close()
-
+    except:
+        print ("Error Creating new page")
     
 #------------------------------
 # dump_all_data
@@ -611,10 +656,11 @@ def add_new_page(driver):
 def dump_all_data():
 
     time.sleep( 20 )
-
+    
     #initialized driver from session
     driver2 = create_driver_session(params["session_id"], params["executor_url"])
-
+    #todo suzan check if this works in angrinon
+    #driver2.switch_to_alert().accept()
     #add visited url to database
     add_new_page(driver2)
 
@@ -627,7 +673,12 @@ def dump_all_data():
     #capture screen shot
     capture_screenshot(driver2)
 
-    #extract all links from page
+    # dump local storage
+    dump_profile_LocalStorage(driver2,'last')
+
+    #extract all links to url, js, and iframe from page
+    extract_js(driver2)
+    extract_iframe(driver2)
     extract_links(driver2)
 
 
@@ -670,6 +721,7 @@ def save_hotspot_params(url,file_name):
         hotspot_params["UsedAccount"] = chkAccount.get()
         hotspot_params["account_email"] = email_text.get()
         hotspot_params["ISP"] = ISP_text.get()
+        hotspot_params["website"] = website_text.get()
 
 
         
@@ -687,27 +739,48 @@ def save_hotspot_params(url,file_name):
             hotspot_params["geoloc_permission"] =  "No"
             
 
-        
+        hotspot_params["hotspot_extension_version"] = "mninphaapoicnaemiigoaillnphomjcb"
         
         with open(file_name + '.json', 'w') as outfile:
             json.dump(hotspot_params, outfile)
     except Exception as e:
+        print(e)
         print ("critical: hotspot parameteres are not saved")
         params["criticalerror"]  = True
 
         
 #------------------------------
-# save_ssl_file
+# copytrfficfilestooutput
 #-----------------------------
-def save_ssl_file(type):
+def copytrfficfilestooutput(type):
     label5.configure(text="Output File Path:", style="BW.TLabel",width=15, justify=LEFT)
     label6.configure(text=params["output_directory"])
 
     copyfile( params["SSLKeyLogPath"] +"\\sslkeylog.log",params["output_directory"] +"\\sslkeylog.log")
 
 
+    copyfile( params["SSLKeyLogPath"] +"\\traffic.pcap",params["output_directory"] +"\\traffic.pcap")
 
-    
+
+#------------------------------
+# getdeviceproperties
+#-----------------------------
+def getdeviceproperties():
+
+    try:
+        from win32api import GetSystemMetrics
+
+        conn = sqlite3.connect(os.path.join(params["output_directory"],params["database_name"]))
+        cur = conn.cursor()
+        insert_query_string = 'INSERT INTO device_config (crawl_id,visit_id,key, value) VALUES (?,?,?, ?)'
+        for x in range(0, 100):
+            cur.execute(insert_query_string, (params["crawl_id"],params["visit_id"],x,GetSystemMetrics(x)))
+            
+        conn.commit()
+        conn.close()
+    except:
+        print ("")
+
 #------------------------------
 # dump_all_final_data
 #-----------------------------
@@ -732,8 +805,6 @@ def dump_all_final_data():
     # this step is important for chrome, because we are decrypting  the cookie encrypted values
     dump_profile_cookies('last')
 
-    #save ssl key log file to the output folder
-    save_ssl_file(type)    
 
     #extract source code for the sub pages
     recursive_dump_page_source (driver2,'last')
@@ -744,21 +815,32 @@ def dump_all_final_data():
     #capture screen shot
     capture_screenshot(driver2)
 
-    dump_profile_LocalStorage('last')
+    # dump local storage
+    dump_profile_LocalStorage(driver2,'last')
 
 
     #save finigerprinting to db
     dump_DFPM_to_db()
 
-    #extract all links from page
+
+    #extract all links to url, js, and iframe from page
+    extract_js(driver2)
     extract_links(driver2)
+    extract_iframe(driver2)
 
     #dump params.json file  
     save_hotspot_params(params["landingpage"],"temp_params")
 
+
     #kill webdriver
     kill_webdriver(driver2)
 
+
+    # dump the source code for all the collected url, js, and iframe
+    dump_source_code()
+
+    # read device configuration
+    getdeviceproperties()
 
 #---------------------------
 # dump_profile_cookies
@@ -783,8 +865,8 @@ def Command_Manager():
         error.configure(text=error_message)
 
     elif params["step"] == "Prepare":
-        #ask user to spoof Mac Address
-        res = messagebox.askquestion("Spoof Mac Address", "Did you spoof the Mac Address for your 'Wireless Network Connection'?\n\nYou can spoof mac address using the TMAC tool.\nIt is available for download from 'https://technitium.com/tmac/'")
+        #ask user to spoof MAC Address
+        res = messagebox.askquestion("Spoof MAC Address", "Did you spoof the MAC Address for your 'Wireless Network Connection'?\n\nYou can spoof the MAC address using the TMAC tool.\nIt is available for download from 'https://technitium.com/tmac/'")
 
         if res == 'yes':
             b1_text.set("Start Registration")
@@ -793,7 +875,7 @@ def Command_Manager():
 
             #initialize the user help  fields      
             label1.configure(text="Captive Portal - Important Guidelines:")
-            label2.configure(text="1. Select you desired WIFI then click 'Start Registration'.\n2. Don't click the 'Start Registration' button until your system prompt to login.\n3. Do not refresh the browser at any case.\n4. Always wait till the website is loaded completely before taking any action.\n5. Close all browsers on your machine/VM (if any) while the application is running.\n6. Click 'Save Content' for any url loaded into the browser other than the 'Welcome page' and 'Landing page' (e.g. Facebook login page)\n7. Repeat data collection incase of any error (i.e loosing connectivitiy with Captive Portal)")
+            label2.configure(text="1. Select you desired WIFI then click 'Start Registration'.\n2. Don't click the 'Start Registration' button until your system prompt to login.\n3. Do not refresh the browser at any case.\n4. Always wait till the website is loaded completely before taking any action.\n5. Close all browsers on your machine/VM (if any) while the application is running.\n6. Disable the anti-virus while the application is running. \n7. We need to capture the fields read from social media accounts, if not shown, please create your own fake account and repeat the test. \n8. Click 'Save Content' for any renderd page into the browser\n9. Repeat data collection incase of any error (i.e loosing connectivitiy with Captive Portal)")
             e1.configure(state="disabled")
             e2.configure(state="disabled")
             list1.configure(state="disabled")
@@ -801,7 +883,7 @@ def Command_Manager():
 
        
     elif params["step"] == "Start":
-        messagebox.showinfo("Important Guidelines", "For data integrity, click 'Save Content' for any url loaded into the browser other than the 'Welcome page' and 'Landing page' (e.g. Facebook login page)\n")
+        messagebox.showinfo("Important Guidelines", "For data integrity, click 'Save Content' for any rendered page into the browser\n")
 
         b1_text.set("Finish")
         params["step"] = "Finish"
@@ -810,12 +892,13 @@ def Command_Manager():
         #reset the user help  fields      
         label1.configure(text="Captive Portal - Important Guidelines:")
         label2.configure(text="1.Connect to the internet using the launched browser then click Finish.\n2. Do not refresh the browser at any case.\n3. Always wait till the website is loaded completely before taking any action.\n4. Close all browsers on your machine/VM (if any) while the application is running.\n5. Repeat data collection incase of any error (i.e loosing connectivitiy with Captive Portal)")
-        label4.configure(text="Important: Click 'Save Content' button for any url loaded into the browser \nother than the welcome page and landing page (e.g. Facebook login page).\nIn general, you dont need this option for most WIFIs consist of two steps authentication.")
+        label4.configure(text="Important: Click 'Save Content' button for any rendered page into the browser.")
 
         #Kill Processes
         killprocess()
-        #Delete SSl Key Log
-        deletesslkeylog()
+        #Delete SSl Key Log & traffic
+        deletetrafficfiles()
+        
         #add environement variable
         AddEnvironementVariables()
         #Create output folders
@@ -848,10 +931,10 @@ def Command_Manager():
             b1_text.set("Verify")
             params["step"] = "verify"
             
-        chkAccountlist.configure(state="disabled")
+        #chkAccountlist.configure(state="disabled")
         #location.configure(state="disabled")
         text_comments.configure(state="disabled")
-        e4.configure(state="disabled")
+        #e4.configure(state="disabled")
         #hide 'save content' button
         b2.grid_remove() 
 
@@ -860,9 +943,12 @@ def Command_Manager():
         dump_all_final_data()
 
         #give wireshark more time to regeter packets before killing the process
-        time.sleep( 50 )
+        time.sleep( 100 )
 
-        #terminate tshark 
+        #save ssl key log file to the output folder
+        copytrfficfilestooutput(type)    
+
+       #terminate tshark 
         pro = params["tsharkProc"] 
         pro.send_signal(subprocess.signal.SIGTERM)
         
@@ -910,15 +996,27 @@ def Command_Manager():
 
 
 #------------------------------
+# getSize
+#-----------------------------
+def getSize(filename):
+    st = os.path.getsize(filename)/float(1<<10)
+    return st
+
+
+#------------------------------
 # validate
 #-----------------------------
 def validate():
 
-    if not os.path.exists(os.path.join(params["output_directory"],'agreement.html')):
-           label1.configure(text="Incomplete Dataset")
-           label4.configure(text="Agreement was not captured, please manually upload it's HTML code as agreement.html  to output folder.\nTo read agreement, you can click the below button to try to open captive portal welcome page. " )
-           return False
-    elif not os.path.exists(os.path.join(params["output_directory"],'sslkeylog.log')):
+##    if not os.path.exists(os.path.join(params["output_directory"],'agreement.html')):
+##           label1.configure(text="Incomplete Dataset")
+##           label4.configure(text="'Privacy policy' was not captured, please save the 'Privacy policy' to the output folder as agreement.html  to output folder." )
+##           return False
+##    elif not os.path.exists(os.path.join(params["output_directory"],'tos.html')):
+##           label1.configure(text="Incomplete Dataset")
+##           label4.configure(text="'Terms of Service' was not captured, please save the 'Terms of Service' to the output folder as tos.html  to output folder." )
+##           return False
+    if not os.path.exists(os.path.join(params["output_directory"],'sslkeylog.log')):
            label1.configure(text="Incomplete Dataset")
            label4.configure(text="sslkeylog - Critical Error occured during the data collection, this dataset should be discarded.")
            return False
@@ -927,10 +1025,14 @@ def validate():
            label1.configure(text="Incomplete Dataset")
            label4.configure(text="Traffic.pcap - Critical Error occured during the data collection, this dataset should be discarded.")
            return False
-    elif not os.path.exists(os.path.join(params["output_directory"],'Source Code')):
+    elif getSize(os.path.join(params["output_directory"],'traffic.pcap')) <200:
            label1.configure(text="Incomplete Dataset")
-           label4.configure(text="Source Code - Critical Error occured during the data collection, this dataset should be discarded.")
+           label4.configure(text="Traffic.pcap size is very small - Critical Error occured during the data collection, this dataset should be discarded.")
            return False
+##    elif not os.path.exists(os.path.join(params["output_directory"],'Source Code')):
+##           label1.configure(text="Incomplete Dataset")
+##           label4.configure(text="Source Code - Critical Error occured during the data collection, this dataset should be discarded.")
+##           return False
     elif params["criticalerror"]:
            label1.configure(text="Incomplete Dataset")
            label4.configure(text="session storage or local sotrage or chrome profile cookies,\nCritical Error occured during the data collection, this dataset should be discarded.")
@@ -973,7 +1075,7 @@ def kill_webdriver(driver):
     browserExe = "chromedriver.exe" 
     os.system("taskkill /f /im "+browserExe)
 
-
+#todo why extension does not retreieve cookie. creation
 
     #delete profile path if not deleted
     myfile= params["browser_profile_path"]
@@ -991,18 +1093,149 @@ def capture_screenshot( driver):
         time.sleep(5)
         
         current_url = driver.current_url + str(params["visit_id"])
+        current_url = urllib.parse.unquote(current_url)
         urlhash = md5(current_url.encode('utf-8')).hexdigest()
         outname = os.path.join(params["output_directory"],'%s.png' %( urlhash))
         driver.save_screenshot(outname)
 
+        screenshot_full_page(driver,urlhash)
+
     except Exception as e:
+        print(e)
         print ("warning: screen shot is not captured ")
+
+
+        
+#------------------------------
+# _stitch_screenshot_parts
+#-----------------------------
+#source: https://github.com/citp/OpenWPM
+def _stitch_screenshot_parts(driver):
+    # Read image parts and compute dimensions of output image
+    total_height = -1
+    max_scroll = -1
+    max_width = -1
+    images = dict()
+    parts = list()
+    for f in glob(os.path.join(params["output_directory"],'parts','%i*-part-*.png' % params["visit_id"])):
+
+        # Load image from disk and parse params out of filename
+        img_obj = Image.open(f)
+        width, height = img_obj.size
+        parts.append((f, width, height))
+        outname, _, index, curr_scroll = os.path.basename(f).rsplit('-', 3)
+        curr_scroll = int(curr_scroll.split('.')[0])
+        index = int(index)
+
+        # Update output image size
+        if curr_scroll > max_scroll:
+            max_scroll = curr_scroll
+            total_height = max_scroll + height
+
+        if width > max_width:
+            max_width = width
+
+        # Save image parameters
+        img = {}
+        img['object'] = img_obj
+        img['scroll'] = curr_scroll
+        images[index] = img
+
+    # Output filename same for all parts, so we can just use last filename
+    outname = outname + '.png'
+    outname = os.path.join(params["output_directory"], outname)
+    output = Image.new('RGB', (max_width, total_height))
+
+    # Compute dimensions for output image
+    for i in range(max(images.keys()) + 1):
+        img = images[i]
+        output.paste(im=img['object'], box=(0, img['scroll']))
+        img['object'].close()
+    try:
+        output.save(outname)
+    except SystemError:
+        print(
+            "BROWSER %i: SystemError while trying to save screenshot %s. \n"
+            "Slices of image %s \n Final size %s, %s." %
+            (crawl_id, outname, '\n'.join([str(x) for x in parts]),
+             max_width, total_height)
+        )
+        pass
+
+#------------------------------
+# execute_script_with_retry
+#-----------------------------
+#source: https://github.com/seleniumhq/selenium-google-code-issue-archive/issues/7931#issuecomment-192191013
+def execute_script_with_retry(driver, script):
+    """Execute script, retrying if a WebDriverException is thrown
+
+    See:
+    https://github.com/seleniumhq/selenium-google-code-issue-archive/issues/7931#issuecomment-192191013
+    """
+    try:
+        return driver.execute_script(script)
+    except WebDriverException:
+        return driver.execute_script(script)
+
+
+#------------------------------
+# screenshot_full_page
+#-----------------------------
+#source: https://github.com/citp/OpenWPM
+def screenshot_full_page(driver, suffix=''):
+
+    outdir = os.path.join(params["output_directory"], 'parts')
+    if not os.path.isdir(outdir):
+        os.mkdir(outdir)
+    if suffix != '':
+        suffix = '-' + suffix
+    urlhash = md5(driver.current_url.encode('utf-8')).hexdigest()
+    outname = os.path.join(outdir, '%i-%s%s-part-%%i-%%i.png' %
+                           (params["visit_id"], urlhash, suffix))
+
+    try:
+        part = 0
+        max_height = execute_script_with_retry(
+            driver, 'return document.body.scrollHeight;')
+        inner_height = execute_script_with_retry(
+            driver, 'return window.innerHeight;')
+        curr_scrollY = execute_script_with_retry(
+            driver, 'return window.scrollY;')
+        prev_scrollY = -1
+        driver.save_screenshot(outname % (part, curr_scrollY))
+        while ((curr_scrollY + inner_height) < max_height and
+                curr_scrollY != prev_scrollY):
+
+            # Scroll down to bottom of previous viewport
+            try:
+                driver.execute_script('window.scrollBy(0, window.innerHeight)')
+            except WebDriverException:
+                print(
+                    "BROWSER %i: WebDriverException while scrolling, "
+                    "screenshot may be misaligned!" % crawl_id)
+                pass
+
+            # Update control variables
+            part += 1
+            prev_scrollY = curr_scrollY
+            curr_scrollY = execute_script_with_retry(
+                driver, 'return window.scrollY;')
+
+            # Save screenshot
+            driver.save_screenshot(outname % (part, curr_scrollY))
+    except WebDriverException:
+        print(
+            "BROWSER %i: Exception while taking full page screenshot \n %s" %
+            (crawl_id, ''.join(excp)))
+        return
+
+    _stitch_screenshot_parts(driver)
+
 
 
 #------------------------------
 # dump_DFPM_to_db
 #-----------------------------
-#todo update extension to capture value
 def dump_DFPM_to_db():
     
     file= os.path.join(params["output_directory"],'DFPM.log')
@@ -1010,7 +1243,7 @@ def dump_DFPM_to_db():
  
         conn = sqlite3.connect(os.path.join(params["output_directory"],params["database_name"]))
         cur = conn.cursor()
-        with open(file) as f:
+        with open(file,"r") as f:
             for line in f:
                 try:
                     output = json.loads(line)
@@ -1056,17 +1289,18 @@ def dump_DFPM( ):
     outname = os.path.join(params["output_directory"],'DFPM.log')
     #sys.stdout = open(outname, 'w')
     jsfile_path = os.path.join(params["root_dir"], 'extensions','chrome_extensions', 'DFPM', "dfpm.js")
-    args  = ["node", jsfile_path, ">", outname]
+    args  = ["node", jsfile_path, ">>", outname]
     p = subprocess.Popen(args , bufsize=0, shell=True, executable="C:\\Windows\\System32\\cmd.exe")
-
 
 
 #------------------------------
 # dump_page_source
 #-----------------------------
 def dump_page_source(driver):
+
     try:
         current_url = driver.current_url + str(params["visit_id"])
+        current_url = urllib.parse.unquote(current_url)
         urlhash = md5(current_url.encode('utf-8')).hexdigest()
         outfile = os.path.join(params["output_directory"], "Source Code",'%s.html' % ( urlhash))
 
@@ -1075,8 +1309,11 @@ def dump_page_source(driver):
 
         with open(outfile, 'wb') as f:
             f.write(driver.page_source.encode('utf8'))
-            f.write(b'\n')
+ 
+
+
     except Exception as e:
+        print(e)
         print ("warning: source code is not captured ")
 
 
@@ -1128,6 +1365,8 @@ def dump_Chrome_profile_cookies(stage):
         # Get the results
         if stage == 'first': #after execution of first page
             rows = get_chrome_cookies(os.path.join(params["browser_profile_path"], 'Default'))
+            print(os.path.join(params["browser_profile_path"]))
+            print (rows)
         else:    
             rows = get_chrome_cookies(params["output_browser_profile"])
 
@@ -1165,43 +1404,174 @@ def dump_Chrome_profile_cookies(stage):
 
 
     except Exception as e:
+        print(e)
         print ("critical: chrome cookies was not captured ")
         params["criticalerror"] = True
 
 
 #------------------------------
+# extract_iframe
+#-----------------------------
+def extract_iframe(webdriver):
+    try:
+        link_urls = result = webdriver.execute_script('''cells = document.querySelectorAll('iframe');
+        URLs = [];
+        [].forEach.call(cells, function (el) {
+            URLs.push(el.src)
+        });
+        return URLs''')
+        
+        cnnCrawl = sqlite3.connect(os.path.join(params["output_directory"],params["database_name"]))
+        cur = cnnCrawl.cursor()
+
+        if len(link_urls) > 0:
+            current_url = webdriver.current_url
+
+
+            insert_query_string = 'INSERT INTO links_found (crawl_id,visit_id,found_on, location,type) VALUES (?,?,?, ?,?)'
+            for link in link_urls:
+                if link != '':
+
+                    cur.execute(insert_query_string, (params["crawl_id"],params["visit_id"],current_url, link,'iframe'))
+
+
+
+        cur.execute(" delete from links_found"
+                       " where rowid not in (select min(rowid)"
+                       " from links_found"
+                       " group by crawl_id,visit_id,found_on,location);")
+             
+
+        cnnCrawl.commit()
+        cnnCrawl.close()
+    except Exception as e:
+        print(e)
+        print ("warning: extract_iframe was not captured ")
+
+
+
+#------------------------------
+# dump_source_code
+#-----------------------------
+def dump_source_code():
+    try:
+        cnnCrawl = sqlite3.connect(os.path.join(params["output_directory"],params["database_name"]))
+        cur = cnnCrawl.cursor()
+
+        cur.execute('select distinct type , location   from links_found where hash_url is null')
+        link_urls = cur.fetchall()
+
+        for link in link_urls:
+                tlink = urllib.parse.unquote(link[1] )
+                urlhash = md5(tlink.encode('utf-8')).hexdigest()
+                if link[0] == 'javascript':
+                    outfile = os.path.join(params["output_directory"], "Source Code","All Source Code",'%s.js' % ( urlhash))
+                elif link[0] == 'html':
+                    outfile = os.path.join(params["output_directory"], "Source Code","All Source Code",'%s.html' % ( urlhash))
+                elif link[0] == 'iframe':
+                    outfile = os.path.join(params["output_directory"], "Source Code","All Source Code",'%s_iframe.html' % ( urlhash))
+
+                if not os.path.exists(os.path.join(params["output_directory"],"Source Code", "All Source Code")):
+                    os.mkdir(os.path.join(params["output_directory"],"Source Code", "All Source Code"))
+                     
+
+                with open(outfile, 'wb') as f:
+                    try:
+                        page = requests.get(link[1])
+                        pagecontent=page.content
+                        f.write(pagecontent)
+                    except Exception as e:
+                          print(e)
+                cur.execute("update links_found set hash_url = ? where type = ? and location = ?", (urlhash, link[0], link[1]))
+
+
+
+             
+        cnnCrawl.commit()
+        cnnCrawl.close()
+    except Exception as e:
+        print(e)
+        print ("warning: dump_source_code was not captured ")
+        
+##    
+
+#------------------------------
 # extract_links
 #-----------------------------
 def extract_links(webdriver):
-    link_urls = result = webdriver.execute_script('''cells = document.querySelectorAll('a');
-    URLs = [];
-    [].forEach.call(cells, function (el) {
-        URLs.push(el.href)
-    });
-    return URLs''')
-    
-    cnnCrawl = sqlite3.connect(os.path.join(params["output_directory"],params["database_name"]))
-    cur = cnnCrawl.cursor()
+    try:
+        link_urls = result = webdriver.execute_script('''cells = document.querySelectorAll('a');
+        URLs = [];
+        [].forEach.call(cells, function (el) {
+            URLs.push(el.href)
+        });
+        return URLs''')
+        
+        cnnCrawl = sqlite3.connect(os.path.join(params["output_directory"],params["database_name"]))
+        cur = cnnCrawl.cursor()
 
-    if len(link_urls) > 0:
-        current_url = webdriver.current_url
-        insert_query_string = 'INSERT INTO links_found (crawl_id,visit_id,found_on, location) VALUES (?,?,?, ?)'
-        for link in link_urls:
-            if link != '':
-                cur.execute(insert_query_string, (params["crawl_id"],params["visit_id"],current_url, link))
+        if len(link_urls) > 0:
+            current_url = webdriver.current_url
+            insert_query_string = 'INSERT INTO links_found (crawl_id,visit_id,found_on, location,type) VALUES (?,?,?, ?,?)'
+            for link in link_urls:
+                if link != '':
+
+                    cur.execute(insert_query_string, (params["crawl_id"],params["visit_id"],current_url,link,'html'))
+
+
+        # delete repeated records
+        cur.execute(" delete from links_found"
+                       " where rowid not in (select min(rowid)"
+                       " from links_found"
+                       " group by crawl_id,visit_id,found_on,location);")
+        # delete any inline javascript     
+        cur.execute(" delete from links_found"
+                       " where location like 'javascript:%'")
+
+        cnnCrawl.commit()
+        cnnCrawl.close()
+    except Exception as e:
+        print ("warning: extract_links was not captured ")
+
+#------------------------------
+# extract_js
+#-----------------------------
+def extract_js(webdriver):
+    try:
+        link_urls = result = webdriver.execute_script('''cells = document.querySelectorAll('script');
+        URLs = [];
+        [].forEach.call(cells, function (el) {
+            URLs.push(el.src)
+        });
+        return URLs''')
+        
+        cnnCrawl = sqlite3.connect(os.path.join(params["output_directory"],params["database_name"]))
+        cur = cnnCrawl.cursor()
+
+        if len(link_urls) > 0:
+            current_url = webdriver.current_url
 
 
 
-    cur.execute(" delete from links_found"
-                   " where rowid not in (select min(rowid)"
-                   " from links_found"
-                   " group by crawl_id,visit_id,found_on,location);")
-         
+            insert_query_string = 'INSERT INTO links_found (crawl_id,visit_id,found_on, location,type) VALUES (?,?,?, ?,?)'
+            for link in link_urls:
+                if link != '':
+                    cur.execute(insert_query_string, (params["crawl_id"],params["visit_id"],current_url, link,'javascript'))
 
-    cnnCrawl.commit()
-    cnnCrawl.close()
-    
 
+
+        cur.execute(" delete from links_found"
+                       " where rowid not in (select min(rowid)"
+                       " from links_found"
+                       " group by crawl_id,visit_id,found_on,location);")
+             
+
+        cnnCrawl.commit()
+        cnnCrawl.close()
+    except Exception as e:
+        print(e)
+        print ("warning: extract_js was not captured ")
+    #    params["criticalerror"] = True
 
 #------------------------------
 # dump_js_cookies
@@ -1224,9 +1594,11 @@ def dump_js_cookies(driver, page_url):
 #-----------------------------
     
 def dump_js_Session_storage(driver, page_url):
-    try:    
+    #todo return
+    #try:    
         if driver.current_url.lower() == 'about:blank':
             return
+
         
         scriptArray="""return Array.apply(0, new Array(sessionStorage.length)).map(function (o, i) { return sessionStorage.key(i) + ':::' + sessionStorage.getItem(sessionStorage.key(i)); })"""
         result = driver.execute_script(scriptArray)
@@ -1259,9 +1631,14 @@ def dump_js_Session_storage(driver, page_url):
         # Close connection to db
         conn.commit()
         conn.close()
-    except Exception as e:
-        print ("critical: session storage was not captured ")
-        params["criticalerror"] = True
+    #except Exception as e:
+    #    print(e)
+    #    print ("critical: session storage was not captured ")
+    #    params["criticalerror"] = True
+
+
+   
+    #todo repeat h&m ad block type
 
 #todo check persist logs
 
@@ -1309,6 +1686,7 @@ def dump_js_local_storage(driver, page_url,stage):
         conn.close()
 
     except Exception as e:
+        print(e)
         print ("critical: local storage was not captured ")
         params["criticalerror"] = True
 
@@ -1318,9 +1696,9 @@ def dump_js_local_storage(driver, page_url,stage):
 # dump_profile_LocalStorage
 #-----------------------------
 
-def dump_profile_LocalStorage(  stage):
+def dump_profile_LocalStorage(driver,stage):
 
-
+    
     if params["browsertype"] =="Firefox":
        dump_firefox_profile_LocalStorage(stage)
     #else:
@@ -1375,7 +1753,7 @@ def get_cookies(profile_directory):
     
     cookie_db = os.path.join(profile_directory, 'cookies.sqlite')
     if not os.path.isfile(cookie_db):
-        print("cannot find cookie.db", cookie_db)
+        print("cannot find cookies.sqlite", cookie_db)
     else:
         conn = sqlite3.connect(cookie_db)
         with conn:
@@ -1417,6 +1795,7 @@ def recursive_dump_page_source(driver,stage):
     try:
         
         current_url = driver.current_url + str(params["visit_id"])
+        current_url = urllib.parse.unquote(current_url)
         urlhash = md5(current_url.encode('utf-8')).hexdigest()
         outfile = os.path.join(params["output_directory"], "Source Code",'%s.json.gz' % (urlhash))
 
@@ -1430,11 +1809,12 @@ def recursive_dump_page_source(driver,stage):
             else:
                 page_source = dict()
             page_source['doc_url'] = doc_url
+            
             ############this code inserted for Hotspot project
             source = driver.page_source
             dump_js_Session_storage(driver,doc_url)
             dump_js_local_storage(driver,doc_url,stage)
-            dump_js_cookies(driver,doc_url)
+            #dump_js_cookies(driver,doc_url)
             ########################
 
             
@@ -1447,10 +1827,10 @@ def recursive_dump_page_source(driver,stage):
             if is_top_frame:
                 return
             out_dict = rv['iframes']
+            
             for frame in frame_stack[1:-1]:
                 out_dict = out_dict[frame.id]['iframes']
             out_dict[frame_stack[-1].id] = page_source
-
         page_source = dict()
         execute_in_all_frames(driver, collect_source, {'rv': page_source})
 
@@ -1458,13 +1838,19 @@ def recursive_dump_page_source(driver,stage):
             f.write(json.dumps(page_source).encode('utf-8'))
 
     except Exception as e:
-        print ("critical: recursive_dump_page_source is not captured")
-        params["criticalerror"]  = True
+       print(e)
+       print ("warning: recursive_dump_page_source is not captured")
+        #params["criticalerror"]  = True
+
+
+
+
 
 
 #------------------------------
-# recursive_dump_page_source
+# execute_in_all_frames
 #-----------------------------
+# source: https://github.com/citp/OpenWPM
 def execute_in_all_frames(driver, func, kwargs={}, frame_stack=['default'],
                           max_depth=5, logger=None, visit_id=-1):
     """https://github.com/citp/OpenWPM
@@ -1476,21 +1862,21 @@ def execute_in_all_frames(driver, func, kwargs={}, frame_stack=['default'],
     argument. Function returns and positional arguments are not supported.
     `func` should be defined with the following structure:
 
-    >>> def print_and_gather_links(driver, frame_stack,
-    >>>                            print_prefix='', links=[]):
-    >>>     elems = driver.find_elements_by_tag_name('a')
-    >>>     for elem in elems:
-    >>>         link = elem.get_attribute('href')
-    >>>         print print_prefix + link
-    >>>         links.append(link)
+  def print_and_gather_links(driver, frame_stack,
+                             print_prefix='', links=[]):
+      elems = driver.find_elements_by_tag_name('a')
+      for elem in elems:
+          link = elem.get_attribute('href')
+          print print_prefix + link
+          links.append(link)
 
     `execute_in_all_frames` should then be called as follows:
 
-    >>> all_links = list()
-    >>> execute_in_all_frames(driver, print_and_gather_links,
-    >>>                       {'prefix': 'Link ', 'links': all_links})
-    >>> print "All links on page (including all iframes):"
-    >>> print all_links
+  all_links = list()
+  execute_in_all_frames(driver, print_and_gather_links,
+                        {'prefix': 'Link ', 'links': all_links})
+  print "All links on page (including all iframes):"
+  print all_links
 
     Parameters
     ----------
@@ -1529,14 +1915,14 @@ def execute_in_all_frames(driver, func, kwargs={}, frame_stack=['default'],
             driver.switch_to_frame(frame)
         except Exception as e:
             if logger is not None:
-                logger.error("Error while switching to frame %s (visit: %d))" %
+                print("Error while switching to frame %s (visit: %d))" %
                              (str(frame), visit_id))
             continue
         else:
             if logger is not None:
                 doc_url = driver.execute_script("return window.document.URL;")
-                logger.info("Switched to frame: %s (visit: %d)" %
-                            (doc_url, visit_id))
+                print("Switched to frame: %s (visit: %d)" %
+                                (doc_url, visit_id))
             # Search within child frame
             execute_in_all_frames(driver, func, kwargs, frame_stack, max_depth)
             switch_to_parent_frame(driver, frame_stack)
@@ -1545,10 +1931,11 @@ def execute_in_all_frames(driver, func, kwargs={}, frame_stack=['default'],
 
 
 #------------------------------
-# recursive_dump_page_source
+# switch_to_parent_frame
 #-----------------------------
+# source: https://github.com/citp/OpenWPM
 def switch_to_parent_frame(driver, frame_stack):
-    """https://github.com/citp/OpenWPM
+    """source: https://github.com/citp/OpenWPM
     Switch driver to parent frame
 
     Selenium doesn't provide a method to switch up to a parent frame.
@@ -1660,6 +2047,7 @@ def add_policy():
             save_agreement(driver)
 
         except Exception as e:
+            print(e)
             label1.configure(text="Incomplete Dataset")
             label4.configure(text="Agreement was not captured, please manually upload it's HTML code as agreement.html  to output folder.\nTo read the agreement, you can click the below button to try to open the captive portal welcome page. " )
             btn_welcome_page.grid(row=32, column=1)
@@ -1674,7 +2062,7 @@ def add_policy():
 #todo check if the any localstorage written before user contest
 window = Tk()
 Large_font  = ("Vernada",12)
-window.title("Collect Hotspot Data")
+window.title("CPInspector")
 #window.geometry("800x500")
 #window.attributes('-fullscreen', True)
 
@@ -1704,25 +2092,32 @@ l1.grid(sticky = W,row=2,column=0, padx=5, pady=5)
 
 l1 = ttk.Label(window, text="Hotspot Address:" , style="BW.TLabel",width=15, justify=LEFT)
 l1.grid(sticky = W,row=3,column=0, padx=5, pady=5)
-
 l1 = ttk.Label(window, text="Browser Type:" , style="BW.TLabel",width=15, justify=LEFT)
 l1.grid(sticky = W,row=4,column=0, padx=5, pady=5)
+if params["DisableSelectBrowser"] == "1":
+   l1.grid_remove()
 
 l1 = ttk.Label(window, text="Protection Method:" , style="BW.TLabel",width=15, justify=LEFT)
 l1.grid(sticky = W,row=5,column=0, padx=5, pady=5)
+if params["DisableProtectionMethodList"] == "1":
+    l1.grid_remove()
+
 
 l1 = ttk.Label(window, text="Used Account:" , style="BW.TLabel",width=15, justify=LEFT)
 l1.grid(sticky = W,row=6,column=0, padx=5, pady=5)
 
-l1 = ttk.Label(window, text="Service Provider:" , style="BW.TLabel",width=15, justify=LEFT)
+l1 = ttk.Label(window, text="Powered By:" , style="BW.TLabel",width=15, justify=LEFT)
 l1.grid(sticky = W,row=7,column=0, padx=5, pady=5)
 
+l1 = ttk.Label(window, text="Corporate Website:" , style="BW.TLabel",width=15, justify=LEFT)
+l1.grid(sticky = W,row=8,column=0, padx=5, pady=5)
 
-l1 = ttk.Label(window, text="Have you authorize the service to track your location?" , style="BW.TLabel",width=42, justify=LEFT)
-l1.grid(sticky = W,row=8,column=0, padx=5, pady=5, columnspan=2)
+
+l1 = ttk.Label(window, text="Have you authorized the service to track your location?" , style="BW.TLabel",width=42, justify=LEFT)
+l1.grid(sticky = W,row=9,column=0, padx=5, pady=5, columnspan=2)
 
 l1 = ttk.Label(window, text="Comments:" , style="BW.TLabel",width=15, justify=LEFT)
-l1.grid(sticky = NW,row=9,column=0, padx=5, pady=5,columnspan=1)
+l1.grid(sticky = NW,row=10,column=0, padx=5, pady=5,columnspan=1)
 
 
 
@@ -1741,12 +2136,13 @@ e2.grid(sticky = W,row=3,column=1)
 
 
 #Draw browser drop down
-OPTIONS = ["Select Browser", "Firefox","Chrome"]
+OPTIONS = ["Chrome","Firefox"]
 dropbrowser = StringVar(window)
 dropbrowser.set(OPTIONS[0]) # default value
 list1 = OptionMenu(window, dropbrowser, *OPTIONS)
 list1.grid(sticky = W,row=4,column=1)
-
+if params["DisableSelectBrowser"] == "1":
+    list1.grid_remove()
 
 #draw drop down
 OPTIONS = ["None",  "AdBlock Plus","Privacy Badger","Incognito"]
@@ -1755,11 +2151,13 @@ dropProtectionMethod = StringVar(window)
 dropProtectionMethod.set(OPTIONS[0]) # default value
 ProtectionMethodList= OptionMenu(window, dropProtectionMethod, *OPTIONS)
 ProtectionMethodList.grid(sticky = W,row=5,column=1)
+if params["DisableProtectionMethodList"] == "1":
+    ProtectionMethodList.grid_remove()
 
 
 
 #draw drop down
-OPTIONS = ["None", "Facebook", "Linkdin","Google","Others"]
+OPTIONS = ["None", "Facebook", "Linkdin","Google", "Twitter", "Instegram" ,"Registration Form", "Others"]
 chkAccount = StringVar(window)
 chkAccount.set(OPTIONS[0]) # default value
 chkAccountlist = OptionMenu(window, chkAccount, *OPTIONS)
@@ -1777,18 +2175,24 @@ def change_dropdown(*args):
 chkAccount.trace('w', change_dropdown)
 
 
-#draw Internet Service Provider field
+#draw powered by  field
 ISP_text = StringVar()
 e4=Entry(window,textvariable=ISP_text,width=40)
 e4.grid(sticky = W,row=7,column=1)
 
 
+#draw corporate website  field
+website_text = StringVar()
+e5=Entry(window,textvariable=website_text,width=40)
+e5.grid(sticky = W,row=8,column=1)
+
+
 #draw location options
 location = IntVar()
 
-Radiobutton(window, text="Yes", variable=location, value=1).grid(row = 8,column=2, padx = 10, pady = 2, sticky=W)
+Radiobutton(window, text="Yes", variable=location, value=1).grid(row = 9,column=2, padx = 10, pady = 2, sticky=W)
 
-Radiobutton(window, text="No", variable=location, value=2).grid(row = 8,column=3, padx = 10, pady = 2, sticky=W)
+Radiobutton(window, text="No", variable=location, value=2).grid(row = 9,column=3, padx = 10, pady = 2, sticky=W)
 #location.grid(sticky = E,row=7,column=1)
 
 
@@ -1815,7 +2219,7 @@ text_comments.tag_bind('bite',
               lambda e, t=text_comments: t.insert(END, "Text"))
 
 #text.pack(side=LEFT)
-text_comments.grid(sticky = W,row=9,column=1)
+text_comments.grid(sticky = W,row=10,column=1)
 #scroll.pack(side=RIGHT, fill=Y)
 
 
@@ -1824,17 +2228,17 @@ e3=Entry(window,textvariable=email_text,width=40)
 
 
 label0 = ttk.Label(window, text="")
-label0.grid(row=9,column=1)
+label0.grid(row=10,column=1)
 
 #draw buttons
 b1_text = tk.StringVar()
 b1=Button(window,textvariable=b1_text,width="14", command=Command_Manager, bg="blue", fg="white")
-b1.grid(row=13, column=1)
+b1.grid(row=14, column=1)
 b1_text.set("Prepare")
 
 
 l1 = ttk.Label(window, text="")
-l1.grid(row=14,column=1)
+l1.grid(row=15,column=1)
 
 
 l1 = ttk.Label(window, text="")
@@ -1867,7 +2271,7 @@ btn_welcome_page = Button(window, text = "Open Captive Portal Welcome Page",comm
 btn_welcome_page.grid(row=32,column=0)
 btn_welcome_page.grid_remove()
 
-label3.configure(text="Cawl into Public Captive Portals")
+label3.configure(text="Captive Portal Inspector")
 
 l1 = ttk.Label(window, text="")
 l1.grid(row=33,column=0, padx=5, pady=5)
@@ -1882,3 +2286,15 @@ window.mainloop()
 
 
 
+#todo update extension to capture value
+
+#todo repeat loto quebec
+#todo repeat Cafe Osmo adblock + firefox
+#todo alexis Nihon
+#check vua sandwitch
+#second cup need to be repeated
+#todo check Bombay Mahal Chrome Adblock plus _C_result2018-11-17_14-41-14 ok, maybe repeat
+#second cup chrome + None need to be repeated
+
+#todo check why h&m did not work with adblock plus
+#todo check with for rbc, the welcome page was not loded in chrome 
