@@ -15,24 +15,35 @@ Currently, CPInspector application has primarily been written and tested on wind
 
 2-Download the VM from https://drive.google.com/open?id=1Rl1NRhPPNpCZ943Nmf3LchT1ypsunYcs
 
-3- Start VirtualBox, and install the VM.
+3- Start VirtualBox,  and select Add from the Machine menu.
+
+4- Select the download hotspot.vbox and select Open.
+
+Unpacking the VM instance and preparing it for use could take a while. 
+
 
 #### Credentials
--hotspot/hotspot	
+
+-hotspot / hotspot	
 
 ### Option 2: Install the application from GitHub
 
 #### Step 1: Download the application
 
 1- Download and install Git for windows. Use the default settings. It can be downloaded from https://git-scm.com/download/win
-2- run git clone https://github.com/MadibaLab/CPInspector 
+
+2- Run git clone https://github.com/MadibaLab/CPInspector 
+
 3- Copy the CPInspector  folder to c:\ and rename it to hotspot
 
 #### Step 2: Install Prerequisites on Windows
 
 Install the following programs on your machine:
+
 1- Python 3.7+ , install  python37 to c:\Program Files\Python37  from C:\hotspot\install\tools\python-3.7.0-amd64.exe
+
 2- Wireshark 2.6.2 +, Install Wireshark from c:\hotspot\install\tools\Wireshark-win64-2.6.2.exe
+
 3- Node JS 8.1.1.4, install Node v8.11.4 from c:\hotspot\install\tools\node-v8.11.4-x64.msi
 
 
