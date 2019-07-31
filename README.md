@@ -74,15 +74,25 @@ For the latest three variables, please replace [user name] with your windows use
 Open a Command Prompt, then run the following command:
  
 pip install selenium==3.14.0 --user
+
 pip install six  --user
+
 pip install pywin32 --user
+
 pip install lxml --user
+
 cd C:\Hotspot\extensions\chrome_extensions\DFPM
+
 npm i npm
+
 npm -i
+
 npm install chrome-remote-interface
+
 pip install lxml --user
+
 pip install Pillow --user
+
 pip install requests --user
 
 
@@ -164,11 +174,13 @@ The output folder name is shown in the application.
 
 ### Notes:
 1- Please extract a copy of hotspot Terms of Use and Privacy Policies and save them in the output folder in html format. 
+
 2- Repeat data collection for other all cases if possible, for example (connecting to the hotspot via social media accounts such as Facebook, LinkedIn, etc..). We have already created fake accounts that can be used in the next section.
+
 3- When testing using social media account, please make sure that you are able to see  the fields that are read from the account. If you cannot see these fields that means that the used account has been used before in this hotspot and you need to use another fake account.
 
 ###Fake Account
-for your own privacy, if required by hotspot, please use the fake accounts in the below link, and not your personal accounts:
+For your own privacy, if required by hotspot, please use the fake accounts in the below link, and not your personal accounts:
  
 https://docs.google.com/document/d/1aEqHuW0vcbiwsp-SudD4nkboVM1Pj7sRI9uEs5fpqWU/edit#
 
