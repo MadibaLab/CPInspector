@@ -9,69 +9,79 @@ Currently, CPInspector application has primarily been written and tested on wind
 
 ## Installation Instructions
 
+### Option1: Install the application from VM
 
-### Step 1: Install Git
+1-Download and install Oracle VM VirtualBox.
 
-First, download and install Git for windows. Use the default settings. It can be downloaded from https://git-scm.com/download/win
+2-Download the VM from https://drive.google.com/open?id=1Rl1NRhPPNpCZ943Nmf3LchT1ypsunYcs
 
+3- Start VirtualBox, and install the VM.
 
-### Step 2: Install on Windows using the command line
+#### Credentials
+-hotspot/hotspot	
 
-You can install Hostspot on Windows from the command line with Administrator Privileges.You can always go to the start button and type in "cmd". When the search results are displayed, right click over the command prompt and select the "run as administrator" option. 
+### Option 2: Install the application from GitHub
 
+#### Step 1: Download the application
 
+1- Download and install Git for windows. Use the default settings. It can be downloaded from https://git-scm.com/download/win
+2- run git clone https://github.com/MadibaLab/CPInspector 
+3- Copy the CPInspector  folder to c:\ and rename it to hotspot
 
-#### 1- Open  Command Prompt with Administrator Privileges then run the following command: 
+#### Step 2: Install Prerequisites on Windows
 
-
-- cd\
-
-
-- git clone https://github.com/sali123/Hotspot/
-
-
-
-- c:\hotspot\install\install.bat 
-
-
-
-
-###### check if the PATH  system enviroment variable has the following:
-
-%APPDATA%\Roaming\npm;C:\Program Files\nodejs;C:\Program Files\Wireshark;c:\python37;c:\python37\Scripts;c:\python37\Lib\site-packages; 
-
-If not, run with admin privilages: Powershell.exe -ExecutionPolicy bypass -File "c:\hotspot\Install\Install-Env.ps1"
+Install the following programs on your machine:
+1- Python 3.7+ , install  python37 to c:\Program Files\Python37  from C:\hotspot\install\tools\python-3.7.0-amd64.exe
+2- Wireshark 2.6.2 +, Install Wireshark from c:\hotspot\install\tools\Wireshark-win64-2.6.2.exe
+3- Node JS 8.1.1.4, install Node v8.11.4 from c:\hotspot\install\tools\node-v8.11.4-x64.msi
 
 
+#### Step 3: Setting  Up PATH
+Programs and other executable files can be in many directories, so operating systems provide a search path that lists the directories that the OS searches for executables. Make sure to add the following directories to PATH Environment Variable in Windows (if not added before):
 
-#### 2- Open  regular Command Prompt (without Administrator Privileges), then run the following command:  
-
-- c:\hotspot\install\installDev.bat 
-
-- Restart the machine (VM if it is used).
-
-
-### Step 3: Install a Mac Spoofing application
-
-Download and install TMAC for windows  from 'https://technitium.com/tmac/. Technitium MAC Address Changer allows you to change (spoof) Media Access Control (MAC) Address of your Network Interface Card (NIC) instantly.
-
-
-
-### Step 4: Check Wi-Fi Adapter Name
-
-1- In the Control Panel, you can click on the Network and Internet category and then click on Network and Sharing Center. If you are in icon view, just click directly on Network and Sharing Center.
-
-2- Click "Stange adapter setting" to check the name of your wireless adapter. 
-
-3- If the name of the adapter does not contains the word "Wireless" or "Wi-Fi" or "ethernet", copy your wirless adapter name, then open the file c:\hotspot\params.json.
-
-4- Update the "wireless_adapter"  key value to your adapter name 
-
-(i.e. "wireless_adapter":"<my adapter name goes here>"
+C:\Program Files\nodejs
+C:\Program Files\Wireshark
+C:\Program Files\python37
+C:\Program Files\python37\Scripts
+C:\Program Files\python37\Lib\site-packages
+C:\users\[user Name]\AppData\Local\Programs\Python\Python37\Scripts
+C:\users\[user Name]\AppData\Local\Programs\Python\Python37
+C:\users\[user Name]\AppData\Roaming\npm
+ 
+For the latest three variables, please replace [user name] with your windows user name.
 
 
+### #Installing Dependencies 
 
-### Step 5: Running the application
+Open a Command Prompt, then run the following command:
+ 
+pip install selenium==3.14.0 --user
+pip install six  --user
+pip install pywin32 --user
+pip install lxml --user
+cd C:\Hotspot\extensions\chrome_extensions\DFPM
+npm i npm
+npm -i
+npm install chrome-remote-interface
+pip install lxml --user
+pip install Pillow --user
+pip install requests --user
+
+
+#### Step 4: Configure Wireless Adapter Name
+
+- Open Control Panel.
+- Click on Network and Internet.
+- Click on Network and Sharing Center
+- Click Change Adapter Setting
+- Right-click the Wireless network adapter, and then tap or click Rename.
+- Set name to HS-Wi-Fi, then click enter. 
+
+
+#### Step5: Restarting Your Computer
+
+
+### Running the application
 
 ####  Visit any place that has a Public Wi-Fi.
 
@@ -94,14 +104,6 @@ Download and install TMAC for windows  from 'https://technitium.com/tmac/. Techn
 	###### Hotspot Address
 	Enter the Hotspot Address.
 
-	###### Browser Type
-	Select the browser type (Firefox or Chrome).
-
-	###### Protection Method
-	Select the extension that will be used for this purpose (Ghostery, Adblock Plus, Privacy Badger, Incognito) or None if you don't want to use any extension.
-
-	###### Account Used
-	Select the account used for connecting to the hotspot (i.e. Faceboox, LinkedIn) or None if no account was used. 
 
 
 - Close all browsers on your machine/VM (if any) while the application is running to avoid capturing invalid traffic.
@@ -109,10 +111,13 @@ Download and install TMAC for windows  from 'https://technitium.com/tmac/. Techn
 - Spoof the 'Wireless Network Connection' Mac Address then Click Prepare button.
 
 - Connecting to the desired WiFi from the bottom right corner of your screen.
+--you are not granted a full access to the internet, you need further actions to view/accept terms and conditions.
+.
+-Wait until the captive portal url is fully loaded into the automated browser, then go to the application click "Save Content" button. 
 
-- When the windows notified you that you have limited connictivity, and you need further authentication. click 'Start Registration' button.
+-Go back to the browser to click the "Connect" button.
 
-- The browser will load the captive portal. go through the  connect to the internet wizard taking into consideration the below guidlines:
+-Open the browser and go through the  connect to internet wizard taking into consideration the below guidelines:
 
 	 * For data integrity, Click 'Save Content' for any url loaded into the browser other than the 'Welcome page' and 'Landing page' (e.g. Facebook login)
 	 * Do not refresh the browser at any case.
@@ -121,14 +126,33 @@ Download and install TMAC for windows  from 'https://technitium.com/tmac/. Techn
 
 	 * Repeat data collection incase of any error (i.e loosing connectivitiy with Captive Portal)
 
+-Enter the following information:
+
+	###### Account Used
+	Select the account used for connecting to the hotspot (i.e. Faceboox, LinkedIn) or None if no account was used. 
+
+
 - Click 'Finish' button.
 
-- Click 'Add Policy', the application will try to upload the policy to Polisis website. If that failed for any reason, please save the policy html code to agreement.html in the output folder. Note the name of the output folder.
+The output folder name is shown in the application.
+
 
 - Click 'Verify' button. Discard the dataset if it could not be verified sucessfully.
 
 
 - Click 'Complete' button.
+
+
+
+### Notes:
+1- Please extract a copy of hotspot Terms of Use and Privacy Policies and save them in the output folder in html format. 
+2- Repeat data collection for other all cases if possible, for example (connecting to the hotspot via social media accounts such as Facebook, LinkedIn, etc..). We have already created fake accounts that can be used in the next section.
+3- When testing using social media account, please make sure that you are able to see  the fields that are read from the account. If you cannot see these fields that means that the used account has been used before in this hotspot and you need to use another fake account.
+
+###Fake Account
+for your own privacy, if required by hotspot, please use the fake accounts in the below link, and not your personal accounts:
+ 
+https://docs.google.com/document/d/1aEqHuW0vcbiwsp-SudD4nkboVM1Pj7sRI9uEs5fpqWU/edit#
 
 
 
