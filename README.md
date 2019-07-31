@@ -69,7 +69,7 @@ C:\users\[user Name]\AppData\Roaming\npm
 For the latest three variables, please replace [user name] with your windows user name.
 
 
-### #Installing Dependencies 
+### Step4: Installing Dependencies 
 
 Open a Command Prompt, then run the following command:
  
@@ -96,7 +96,7 @@ pip install Pillow --user
 pip install requests --user
 
 
-#### Step 4: Configure Wireless Adapter Name
+#### Step 5: Configure Wireless Adapter Name 
 
 - Open Control Panel.
 - Click on Network and Internet.
@@ -105,8 +105,20 @@ pip install requests --user
 - Right-click the Wireless network adapter, and then tap or click Rename.
 - Set name to HS-Wi-Fi, then click enter. 
 
+(Required if the appliaction is installed on main Computer only)
 
-#### Step5: Restarting Your Computer
+
+#### Step6: Install Browsers
+
+1- Install Firefox from C:\hotspot\install\tools\FirefoxSetup60.2.0esr.exe
+
+2- Install Chrome from C:\hotspot\install\tools\googlechromestandaloneenterprise64.msi
+
+3- Copy the C:\Program Files\Mozilla Firefox folder to c:\hotspot\browsers
+
+4- Copy the C:\Program Files (x86)\Google\Chrome folder to c:\hotspot\browsers
+
+#### Step7: Restarting Your Computer
 
 
 ### Running the application
