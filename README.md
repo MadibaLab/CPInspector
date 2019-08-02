@@ -62,9 +62,9 @@ C:\Program Files\python37\Lib\site-packages
 
 C:\users\[user Name]\AppData\Local\Programs\Python\Python37\Scripts
 
-C:\users\[user Name]\AppData\Local\Programs\Python\Python37
+C:\users\\[user Name]\AppData\Local\Programs\Python\Python37
 
-C:\users\[user Name]\AppData\Roaming\npm
+C:\users\\[user Name]\AppData\Roaming\npm
  
 For the latest three variables, please replace [user name] with your windows user name.
 
