@@ -14,7 +14,7 @@
     "chrome-remote-interface": "^0.25.7",
     "commander": "^2.11.0",
     "eventemitter2": "^4.1.2",
-    "npm": "^6.10.1",
+    "npm": "^6.13.4",
     "request": "^2.83.0",
     "request-promise-native": "^1.0.5"
   },
